@@ -1,73 +1,83 @@
-// src/pages/Home.tsx
-import { useAppSelector } from "../hooks/useAppSelector";
-import { useGetMyProfileQuery } from "../api/profileApi";
-import ProfileForm from "@/components/forms/ProfileForm";
-import OrdersTable from "@/components/tables/OrdersTable";
-import ErrorBoundary from "@/components/error/ErrorBoundary";
+import { Truck, Shield } from "lucide-react";
 
 export default function Home() {
-  const token = useAppSelector((state) => state.authToken.token);
-  const {
-    data: profile,
-    isLoading,
-    error,
-  } = useGetMyProfileQuery(undefined, {
-    skip: !token,
-  });
+  
 
-  if (!token)
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-lg text-gray-600">
-          Вы не авторизованы. Перейдите на страницу логина.
-        </p>
-      </div>
-    );
-
-  if (isLoading)
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-lg text-gray-600">Загрузка профиля...</p>
-      </div>
-    );
-
-  // If there's no profile or API returns 404, show the profile creation form
-  if (!profile || (error && "status" in error && error.status === 404)) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div
-          style={{
-            maxWidth: 600,
-            margin: "0 auto",
-            padding: "50px 20px",
-            textAlign: "center",
-          }}
-        >
-          <ProfileForm />
+  const Hero = (
+    <section className="bg-white">
+      <div className="max-w-6xl mx-auto px-6 py-16 md:py-20">
+        <div className="max-w-3xl">
+          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">
+            Быстрый поиск перевозчиков в Узбекистане
+          </h1>
+          <p className="mt-4 text-gray-600 text-base md:text-lg">
+            Зарегистрируйтесь и бесплатно добавляйте грузы, находите надёжных
+            перевозчиков и управляйте перевозками онлайн.
+          </p>
+          {/* Никаких кнопок/ссылок здесь */}
         </div>
       </div>
-    );
-  }
+    </section>
+  );
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <ErrorBoundary
-        fallback={
-          <div className="p-6">
-            <div className="bg-red-50 border border-red-200 rounded-md p-4">
-              <h3 className="text-red-800 font-medium">
-                Ошибка загрузки таблицы заказов
-              </h3>
-              <p className="text-red-600 text-sm mt-1">
-                Не удалось отобразить таблицу заказов. Попробуйте обновить
-                страницу.
+  const Safety = (
+    <section className="max-w-6xl mx-auto px-6 mt-10">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <h2 className="text-xl font-bold text-gray-900">
+          Безопасность и надёжность
+        </h2>
+        <p className="mt-2 text-sm text-gray-600">
+          Мы гарантируем безопасность ваших грузов и прозрачность перевозок.
+        </p>
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="flex items-start">
+            <div className="p-3 rounded-full bg-blue-50 text-blue-600">
+              <Shield className="h-6 w-6" />
+            </div>
+            <div className="ml-3">
+              <h4 className="text-md font-semibold text-gray-900">
+                Страхование грузов
+              </h4>
+              <p className="mt-1 text-sm text-gray-600">
+                Все грузы застрахованы на время перевозки.
               </p>
             </div>
           </div>
-        }
-      >
-        <OrdersTable />
-      </ErrorBoundary>
-    </div>
+          <div className="flex items-start">
+            <div className="p-3 rounded-full bg-green-50 text-green-600">
+              <Truck className="h-6 w-6" />
+            </div>
+            <div className="ml-3">
+              <h4 className="text-md font-semibold text-gray-900">
+                Проверенные перевозчики
+              </h4>
+              <p className="mt-1 text-sm text-gray-600">
+                Все перевозчики проходят строгую проверку.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <div className="p-3 rounded-full bg-red-50 text-red-600">
+              <Shield className="h-6 w-6" />
+            </div>
+            <div className="ml-3">
+              <h4 className="text-md font-semibold text-gray-900">
+                Гарантия возврата груза
+              </h4>
+              <p className="mt-1 text-sm text-gray-600">
+                В случае форс-мажора мы гарантируем возврат груза.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+
+  return (
+      <div className="min-h-screen bg-gray-50">
+        {Hero}
+        {Safety}
+      </div>
   );
 }

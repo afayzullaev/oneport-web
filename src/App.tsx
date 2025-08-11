@@ -5,9 +5,11 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import React from "react";
 import Home from "./pages/Home";
 import Header from "./components/layout/Header";
 import { useAppSelector } from "./hooks/useAppSelector";
+import { useAppDispatch } from "./hooks/useAppDispatch";
 import Login from "./pages/Login";
 import Orders from "./pages/Orders";
 import DetailedOrder from "./pages/DetailedOrder";
@@ -21,13 +23,40 @@ import DetailedTruck from "./pages/DetailedTruck";
 import ExportersCatalog from "./pages/ExportersCatalog";
 import MyOrders from "./pages/MyOrders";
 import MyTrucks from "./pages/MyTrucks";
+import CreateProfile from "./pages/createProfile";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAppSelector((state) => state.authToken.token);
-  return token ? children : <Navigate to="/login" replace />;
+  const { hasProfile, isProfileChecked, isLoading } = useAppSelector((state) => state.profile);
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If we haven't checked yet and not currently loading, redirect to login to trigger check
+  if (!isProfileChecked && !isLoading) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Show loading only if currently checking
+  if (!isProfileChecked && isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg">Checking profile...</div>
+      </div>
+    );
+  }
+
+  // We've checked and user doesn't have profile
+  if (isProfileChecked && !hasProfile) {
+    return <Navigate to="/create-profile" replace />;
+  }
+
+  return <>{children}</>;
 }
 
 function App() {
+  
   return (
     <ErrorBoundary>
       <Router>
@@ -38,12 +67,16 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <PrivateRoute>
                     <Home />
-                  </PrivateRoute>
                 }
               />
               <Route path="/login" element={<Login />} />
+              <Route path="/create-profile" element={
+                <PrivateRoute>
+                  <CreateProfile />
+                </PrivateRoute>
+              } />
+              
               <Route
                 path="/orders"
                 element={

@@ -5,6 +5,9 @@ import { useAppDispatch } from "../hooks/useAppDispatch";
 import { setToken } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { Truck, Shield } from "lucide-react";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { useGetMyProfileQuery } from "../api/profileApi";
+import { setProfile, setNoProfile, setProfileLoading } from "../store/profileSlice";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,6 +22,7 @@ export default function Login() {
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
   ];
+  
 
   const [sendOtp, { isLoading: sendingOtp, error: sendError }] =
     useSendOtpMutation();
@@ -29,6 +33,25 @@ export default function Login() {
     const result = await sendOtp({ phone });
     if ("data" in result) setStep("otp");
   };
+  const token = useAppSelector((state) => state.authToken.token);
+  const { isProfileChecked } = useAppSelector((state) => state.profile);
+  const {
+    data: profile,
+    isFetching: loadingProfile,
+    error,
+  } = useGetMyProfileQuery(undefined, {
+    skip: !token || isProfileChecked, // Skip if already checked!
+  });
+
+  useEffect(() => {
+    if (loadingProfile) {
+      dispatch(setProfileLoading(true));
+    } else if (profile) {
+      dispatch(setProfile(profile));
+    } else if (error) {
+      dispatch(setNoProfile()); // Mark as "no profile" but checked
+    }
+  }, [profile, error, loadingProfile, dispatch]);
 
   const handleVerifyOtp = async () => {
     const result = await verifyOtp({ phone, otp });

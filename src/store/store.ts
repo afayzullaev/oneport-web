@@ -17,6 +17,8 @@ import { truckOptionsApi } from "../api/truckOptionsApi";
 import { truckPricingTypesApi } from "../api/truckPricingTypesApi";
 import { locationApi } from "../api/locationApi";
 import languageReducer from "@/store/languageSlice";
+import profileReducer from './profileSlice';
+
 
 export interface AuthState {
   token: string | null;
@@ -60,17 +62,28 @@ const persistConfig = {
   key: "authToken",
   storage,
   whitelist: ["token"],
+  blacklist: ["profile"], // Don't persist profile
+};
+
+const profilePersistConfig = {
+  key: "profile",
+  storage,
+  whitelist: ["hasProfile", "isProfileChecked"], // Only persist these flags
+  blacklist: ["profile", "isLoading"], // Don't persist actual profile data
 };
 
 const persistedAuthReducer = persistReducer(
   persistConfig,
   authTokenSlice.reducer
 );
+const persistedProfileReducer = persistReducer(profilePersistConfig, profileReducer);
+
 
 export const store = configureStore({
   reducer: {
     authToken: persistedAuthReducer,
     language: languageReducer,
+    profile: persistedProfileReducer,
     [authApi.reducerPath]: authApi.reducer,
     [profilesApi.reducerPath]: profilesApi.reducer,
     [ordersApi.reducerPath]: ordersApi.reducer,
