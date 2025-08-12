@@ -1,6 +1,6 @@
 import React from "react";
-import OrdersTable from "@/components/tables/OrdersTable";
-import CustomTable from "../components/tables/customTable"
+//import OrdersTable from "@/components/tables/OrdersTable";
+import CustomTable from "../components/tables/CustomTable"
 
 const Orders: React.FC = () => {
   return (
