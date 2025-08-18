@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter as Router,
   Routes,
@@ -26,7 +25,9 @@ import CreateProfile from "./pages/createProfile";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAppSelector((state) => state.authToken.token);
-  const { hasProfile, isProfileChecked, isLoading } = useAppSelector((state) => state.profile);
+  const { hasProfile, isProfileChecked, isLoading } = useAppSelector(
+    (state) => state.profile
+  );
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -55,7 +56,6 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  
   return (
     <ErrorBoundary>
       <Router>
@@ -63,51 +63,21 @@ function App() {
           <Header />
           <main>
             <Routes>
-              <Route
-                path="/"
-                element={
-                    <Home />
-                }
-              />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/create-profile" element={
-                <PrivateRoute>
-                  <CreateProfile />
-                </PrivateRoute>
-              } />
-              
               <Route
-                path="/orders"
+                path="/create-profile"
                 element={
                   <PrivateRoute>
-                    <Orders />
+                    <CreateProfile />
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/orders/:orderId"
-                element={
-                  <PrivateRoute>
-                    <DetailedOrder />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/trucks/:truckId"
-                element={
-                  <PrivateRoute>
-                    <DetailedTruck />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/trucks"
-                element={
-                  <PrivateRoute>
-                    <Trucks />
-                  </PrivateRoute>
-                }
-              />
+
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:orderId" element={<DetailedOrder />} />
+              <Route path="/trucks/:truckId" element={<DetailedTruck />} />
+              <Route path="/trucks" element={<Trucks />} />
               <Route
                 path="/profile"
                 element={

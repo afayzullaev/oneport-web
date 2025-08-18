@@ -57,7 +57,9 @@ export default function Login() {
     const result = await verifyOtp({ phone, otp });
     if ("data" in result) {
       dispatch(setToken(result.data?.token || ""));
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   };
 

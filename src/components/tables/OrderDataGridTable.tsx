@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { useNavigate } from 'react-router-dom';
+import * as React from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 import { useGetAllOrdersQuery, useFilterOrdersQuery } from "@/api/ordersApi";
 import type { Order, LocalizedString } from "@/types/models/cargoOwner/order";
 import { useLocalization } from "@/hooks/useLocalization";
@@ -9,7 +9,14 @@ import OrdersFilter from "@/components/filters/OrdersFilter";
 import { useOrdersFilter } from "@/hooks/useOrdersFilter";
 import type { LoadPackage } from "@/types/models/cargoOwner/loadPackage";
 import type { LoadType } from "@/types/models/cargoOwner/loadType";
-import { Package, MapPin, DollarSign, Weight, Building, User } from 'lucide-react';
+import {
+  Package,
+  MapPin,
+  DollarSign,
+  Weight,
+  Building,
+  User,
+} from "lucide-react";
 
 // Компонент для отображения названия loadType
 const LoadTypeName: React.FC<{ loadType?: Order["loadType"] }> = ({
@@ -81,12 +88,13 @@ const CompanyName: React.FC<{
   return null;
 };
 
-const CustomTable: React.FC = () => {
+const OrderDataGridTable: React.FC = () => {
   const navigate = useNavigate();
   const { t, getLocalizedText, formatWeight } = useLocalization();
 
-  const { filters, cleanFilters, hasActiveFilters, updateFilters } = useOrdersFilter();
-  
+  const { filters, cleanFilters, hasActiveFilters, updateFilters } =
+    useOrdersFilter();
+
   const {
     data: filteredOrders,
     isLoading: isFilterLoading,
@@ -94,7 +102,7 @@ const CustomTable: React.FC = () => {
   } = useFilterOrdersQuery(cleanFilters, {
     skip: !hasActiveFilters,
   });
-  
+
   const {
     data: allOrders,
     isLoading: isAllLoading,
@@ -108,7 +116,8 @@ const CustomTable: React.FC = () => {
   const error = hasActiveFilters ? filterError : allError;
 
   const formatDimensions = (dimensions: Order["dimensions"]) => {
-    if (!dimensions || typeof dimensions !== "object") return t.common.notDimensioned;
+    if (!dimensions || typeof dimensions !== "object")
+      return t.common.notDimensioned;
     const { length, width, height } = dimensions;
     if (!length || !width || !height) return t.common.notDimensioned;
     return `${length}×${width}×${height}м`;
@@ -138,7 +147,10 @@ const CustomTable: React.FC = () => {
     }
   };
 
-  const getObjectName = (obj: any, fallback: string = t.common.notSpecified): string => {
+  const getObjectName = (
+    obj: any,
+    fallback: string = t.common.notSpecified
+  ): string => {
     if (!obj) return fallback;
     if (typeof obj === "string") return obj;
 
@@ -154,7 +166,9 @@ const CustomTable: React.FC = () => {
     return fallback;
   };
 
-  const getTypesBadges = (types?: (string | { _id: string; name: LocalizedString; __v?: number })[]) => {
+  const getTypesBadges = (
+    types?: (string | { _id: string; name: LocalizedString; __v?: number })[]
+  ) => {
     if (!types || types.length === 0) return null;
 
     return (
@@ -178,7 +192,7 @@ const CustomTable: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'loadName',
+      field: "loadName",
       headerName: t.ordersTable.headers.cargo,
       minWidth: 10,
       resizable: true,
@@ -197,7 +211,7 @@ const CustomTable: React.FC = () => {
       ),
     },
     {
-      field: 'characteristics',
+      field: "characteristics",
       headerName: t.ordersTable.headers.characteristics,
       //width: getColumnWidth(30),
       minWidth: 10,
@@ -229,7 +243,7 @@ const CustomTable: React.FC = () => {
       ),
     },
     {
-      field: 'pricing',
+      field: "pricing",
       headerName: t.ordersTable.headers.price,
       minWidth: 10,
       flex: 0.8,
@@ -237,12 +251,14 @@ const CustomTable: React.FC = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         const pricing = params.row.pricing;
-        if (!pricing) return <span className="text-gray-500">{t.common.notSpecified}</span>;
+        if (!pricing)
+          return <span className="text-gray-500">{t.common.notSpecified}</span>;
 
         const pricingTypeText = pricing.pricingType
           ? typeof pricing.pricingType === "string"
             ? pricing.pricingType
-            : typeof pricing.pricingType === "object" && pricing.pricingType.name
+            : typeof pricing.pricingType === "object" &&
+              pricing.pricingType.name
             ? getLocalizedText(pricing.pricingType.name)
             : pricing.pricingType._id || "Pricing Type"
           : t.common.som;
@@ -282,7 +298,7 @@ const CustomTable: React.FC = () => {
       },
     },
     {
-      field: 'loadAddress',
+      field: "loadAddress",
       headerName: t.ordersTable.headers.from,
       //width: getColumnWidth(15),
       minWidth: 10,
@@ -295,11 +311,12 @@ const CustomTable: React.FC = () => {
             <MapPin size={16} className="text-green-600" />
             <span className="text-sm text-gray-900">
               {params.row.loadAddress?.display_place || t.common.notSpecified}
-              {params.row.loadAddress?.country && params.row.loadAddress?.country !== "-" && (
-                <span className="text-xs text-gray-500 ml-1">
-                  ({params.row.loadAddress.country})
-                </span>
-              )}
+              {params.row.loadAddress?.country &&
+                params.row.loadAddress?.country !== "-" && (
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({params.row.loadAddress.country})
+                  </span>
+                )}
             </span>
           </div>
           {getTypesBadges(params.row.loadTypes)}
@@ -307,7 +324,7 @@ const CustomTable: React.FC = () => {
       ),
     },
     {
-      field: 'unloadAddress',
+      field: "unloadAddress",
       headerName: t.ordersTable.headers.to,
       //width: getColumnWidth(15),
       minWidth: 10,
@@ -320,11 +337,12 @@ const CustomTable: React.FC = () => {
             <MapPin size={16} className="text-red-600" />
             <span className="text-sm text-gray-900">
               {params.row.unloadAddress?.display_place || t.common.notSpecified}
-              {params.row.unloadAddress?.country && params.row.unloadAddress?.country !== "-" && (
-                <span className="text-xs text-gray-500 ml-1">
-                  ({params.row.unloadAddress.country})
-                </span>
-              )}
+              {params.row.unloadAddress?.country &&
+                params.row.unloadAddress?.country !== "-" && (
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({params.row.unloadAddress.country})
+                  </span>
+                )}
             </span>
           </div>
           {getTypesBadges(params.row.unloadTypes)}
@@ -332,7 +350,7 @@ const CustomTable: React.FC = () => {
       ),
     },
     {
-      field: 'loadStatus',
+      field: "loadStatus",
       headerName: t.ordersTable.headers.status,
       //width: getColumnWidth(10),
       minWidth: 10,
@@ -403,14 +421,13 @@ const CustomTable: React.FC = () => {
     <div className="p-6">
       {/* Фильтры заказов */}
       <OrdersFilter currentFilters={filters} onFiltersChange={updateFilters} />
-      
+
       <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-        <div style={{ height: 600, width: '100%' }}>
+        <div style={{ height: 600, width: "100%" }}>
           <DataGrid
             rows={rows}
             columns={columns}
             pageSizeOptions={[5, 10, 25, 50]}
-            
             initialState={{
               pagination: {
                 paginationModel: { pageSize: 10 },
@@ -418,50 +435,58 @@ const CustomTable: React.FC = () => {
             }}
             disableColumnFilter={true}
             autoPageSize
+            localeText={{
+              // Column management texts
+              columnMenuHideColumn: "Скрыть столбец",
+              columnMenuManageColumns: "Управление столбцами",
+
+              // Optional: other localization texts
+              noRowsLabel: "Нет данных",
+            }}
             onRowClick={(params) => {
               navigate(`/orders/${params.row._id}`);
             }}
             sx={{
-              border: 'none',
-              '& .MuiDataGrid-cell': {
-                borderBottom: '1px solid #f3f4f6',
-                display: 'flex',
-                alignItems: 'center',
+              border: "none",
+              "& .MuiDataGrid-cell": {
+                borderBottom: "1px solid #f3f4f6",
+                display: "flex",
+                alignItems: "center",
               },
-              '& .MuiDataGrid-virtualScroller': {
-                overflowX: 'hidden !important', // forcibly hide horizontal scroll
+              "& .MuiDataGrid-virtualScroller": {
+                overflowX: "hidden !important", // forcibly hide horizontal scroll
               },
-              '& .MuiDataGrid-columnHeader': {
-                backgroundColor: '#f9fafb',
+              "& .MuiDataGrid-columnHeader": {
+                backgroundColor: "#f9fafb",
                 fontWeight: 600,
-                fontSize: '0.75rem',
-                color: '#374151',
-                minHeight: '35px !important', // Decrease from default ~56px
-                maxHeight: '35px !important',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                borderRight:'1px solid #dadde3ff',
-                borderBottom: '2px solid #6b7280',
-                '&:focus': {
-                  outline: 'none', // Remove focus outline
-                  border: 'none', // Remove focus border
+                fontSize: "0.75rem",
+                color: "#374151",
+                minHeight: "35px !important", // Decrease from default ~56px
+                maxHeight: "35px !important",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                borderRight: "1px solid #dadde3ff",
+                borderBottom: "2px solid #6b7280",
+                "&:focus": {
+                  outline: "none", // Remove focus outline
+                  border: "none", // Remove focus border
                 },
-                '&:focus-within': {
-                  outline: 'none', // Remove focus-within outline
+                "&:focus-within": {
+                  outline: "none", // Remove focus-within outline
                 },
-                '&.Mui-focusVisible': {
-                  outline: 'none', // Remove focus-visible outline
-                  backgroundColor: '#f9fafb', // Keep original background
-                }, 
-              },
-              '& .MuiDataGrid-row': {
-                cursor: 'pointer',
-                '&:hover': {
-                  backgroundColor: '#dbeafe',
+                "&.Mui-focusVisible": {
+                  outline: "none", // Remove focus-visible outline
+                  backgroundColor: "#f9fafb", // Keep original background
                 },
               },
-              '& .MuiDataGrid-columnSeparator': {
-                display: 'block',
+              "& .MuiDataGrid-row": {
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "#dbeafe",
+                },
+              },
+              "& .MuiDataGrid-columnSeparator": {
+                display: "block",
               },
             }}
           />
@@ -489,8 +514,6 @@ const CustomTable: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
-export default CustomTable;
-
-
+export default OrderDataGridTable;

@@ -1,8 +1,6 @@
 import { Truck, Shield } from "lucide-react";
 
 export default function Home() {
-  
-
   const Hero = (
     <section className="bg-white">
       <div className="max-w-6xl mx-auto px-6 py-16 md:py-20">
@@ -75,9 +73,9 @@ export default function Home() {
   );
 
   return (
-      <div className="min-h-screen bg-gray-50">
-        {Hero}
-        {Safety}
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {Hero}
+      {Safety}
+    </div>
   );
 }
