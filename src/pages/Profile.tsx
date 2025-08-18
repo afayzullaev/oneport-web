@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetMyProfileQuery } from "@/api/profileApi";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { clearProfile } from "@/store/profileSlice";

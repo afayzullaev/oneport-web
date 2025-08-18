@@ -5,7 +5,6 @@ import { useAppDispatch } from "../hooks/useAppDispatch";
 import { setToken } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { Truck, Shield } from "lucide-react";
-import { useAppSelector } from "@/hooks/useAppSelector";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -30,7 +29,6 @@ export default function Login() {
     const result = await sendOtp({ phone });
     if ("data" in result) setStep("otp");
   };
-  const token = useAppSelector((state) => state.authToken.token);
 
   const handleVerifyOtp = async () => {
     const result = await verifyOtp({ phone, otp });
