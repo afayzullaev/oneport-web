@@ -29,7 +29,7 @@ const Header: React.FC = () => {
   const isSignedIn = Boolean(token);
   const { t } = useLocalization();
   const location = useLocation();
-  
+
   // Dropdown state
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -37,14 +37,17 @@ const Header: React.FC = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -77,26 +80,25 @@ const Header: React.FC = () => {
         </Link>
 
         {/* Navigation - only show when signed in */}
-        {isSignedIn && (
-          <nav className="hidden gap-2 lg:flex">
-            <Link to="/trucks" className={getNavLinkClasses("/trucks")}>
-              <Search size={18} />
-              <span>{t.header.findCars}</span>
-            </Link>
-            <Link to="/orders" className={getNavLinkClasses("/orders")}>
-              <Cube size={18} />
-              <span>{t.header.findCargos}</span>
-            </Link>
-            <Link to="/post-truck" className={getNavLinkClasses("/post-truck")}>
-              <Plus size={18} />
-              <span>{t.header.postCar}</span>
-            </Link>
-            <Link to="/post-cargo" className={getNavLinkClasses("/post-cargo")}>
-              <Plus size={18} />
-              <span>{t.header.postCargo}</span>
-            </Link>
-          </nav>
-        )}
+
+        <nav className="hidden gap-2 lg:flex">
+          <Link to="/trucks" className={getNavLinkClasses("/trucks")}>
+            <Search size={18} />
+            <span>{t.header.findCars}</span>
+          </Link>
+          <Link to="/orders" className={getNavLinkClasses("/orders")}>
+            <Cube size={18} />
+            <span>{t.header.findCargos}</span>
+          </Link>
+          <Link to="/post-truck" className={getNavLinkClasses("/post-truck")}>
+            <Plus size={18} />
+            <span>{t.header.postCar}</span>
+          </Link>
+          <Link to="/post-cargo" className={getNavLinkClasses("/post-cargo")}>
+            <Plus size={18} />
+            <span>{t.header.postCargo}</span>
+          </Link>
+        </nav>
 
         {/* Auth Section */}
         <div className="flex items-center gap-4 mr-4 md:mr-8">
@@ -113,53 +115,55 @@ const Header: React.FC = () => {
               >
                 <User size={18} />
                 <span className="hidden md:inline">{t.header.menu}</span>
-                <ChevronDown 
-                  size={16} 
-                  className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform ${
+                    isDropdownOpen ? "rotate-180" : ""
+                  }`}
                 />
               </Button>
-              
+
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                   <div className="py-1">
-                    <Link 
-                      to="/profile" 
+                    <Link
+                      to="/profile"
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <User size={16} />
                       {t.header.profile}
                     </Link>
-                    
-                    <Link 
-                      to="/my-orders" 
+
+                    <Link
+                      to="/my-orders"
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <Cube size={16} />
                       {t.pages.myOrders}
                     </Link>
-                    
-                    <Link 
-                      to="/my-trucks" 
+
+                    <Link
+                      to="/my-trucks"
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <Truck size={16} />
                       {t.pages.myTrucks}
                     </Link>
-                    
-                    <Link 
-                      to="/exporters-catalog" 
+
+                    <Link
+                      to="/exporters-catalog"
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <Building2 size={16} />
                       {t.pages.exportersCatalog}
                     </Link>
-                    
+
                     <div className="border-t border-gray-200 my-1"></div>
-                    
+
                     <button
                       onClick={handleSignOut}
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"

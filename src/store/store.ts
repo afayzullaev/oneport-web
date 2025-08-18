@@ -17,8 +17,7 @@ import { truckOptionsApi } from "../api/truckOptionsApi";
 import { truckPricingTypesApi } from "../api/truckPricingTypesApi";
 import { locationApi } from "../api/locationApi";
 import languageReducer from "@/store/languageSlice";
-import profileReducer from './profileSlice';
-
+import profileReducer, { clearProfile } from "./profileSlice";
 
 export interface AuthState {
   token: string | null;
@@ -44,6 +43,7 @@ export const { setToken, clearToken } = authTokenSlice.actions;
 export const logout = () => (dispatch: any) => {
   // 1. Очищаем токен
   dispatch(clearToken());
+  dispatch(clearProfile());
 
   // 2. Очищаем весь кеш RTK Query
   dispatch(authApi.util.resetApiState());
@@ -68,16 +68,18 @@ const persistConfig = {
 const profilePersistConfig = {
   key: "profile",
   storage,
-  whitelist: ["hasProfile", "isProfileChecked"], // Only persist these flags
-  blacklist: ["profile", "isLoading"], // Don't persist actual profile data
+  whitelist: [], // Don't persist any profile data
+  blacklist: ["profile", "hasProfile", "profileFetched"], // Don't persist anything
 };
 
 const persistedAuthReducer = persistReducer(
   persistConfig,
   authTokenSlice.reducer
 );
-const persistedProfileReducer = persistReducer(profilePersistConfig, profileReducer);
-
+const persistedProfileReducer = persistReducer(
+  profilePersistConfig,
+  profileReducer
+);
 
 export const store = configureStore({
   reducer: {

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useCreateProfileMutation, type Profile } from "@/api/profileApi";
+import {
+  useCreateProfileMutation,
+  type Profile,
+} from "@/api/profileApi";
+import { useNavigate } from "react-router-dom";
 
 const ProfileForm: React.FC = () => {
+  const navigate = useNavigate();
   const [createProfile, { isLoading }] = useCreateProfileMutation();
   const [formData, setFormData] = useState({
     type: "individual" as "individual" | "legal_entity",
@@ -75,10 +80,9 @@ const ProfileForm: React.FC = () => {
       };
 
       await createProfile(profileData).unwrap();
-      // Profile created successfully - RTK Query will automatically update the cache
+      navigate("/");
     } catch (error) {
       console.error("Error creating profile:", error);
-      // You might want to show an error message to the user here
     }
   };
 

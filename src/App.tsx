@@ -22,33 +22,27 @@ import ExportersCatalog from "./pages/ExportersCatalog";
 import MyOrders from "./pages/MyOrders";
 import MyTrucks from "./pages/MyTrucks";
 import CreateProfile from "./pages/createProfile";
+import { LoadingSpinner } from "./components/ui/LoadingSpinner";
+import { useDelayedProfileFetch } from "./hooks/useDelayedProfileFetch";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAppSelector((state) => state.authToken.token);
-  const { hasProfile, isProfileChecked, isLoading } = useAppSelector(
-    (state) => state.profile
-  );
+  const profile = useAppSelector((state) => state.profile.profile);
+  const { isLoading } = useDelayedProfileFetch();
+  
+  console.log("🔥 PrivateRoute - isLoading:", isLoading);
+  console.log("🔥 PrivateRoute - token:", !!token);
+  console.log("🔥 PrivateRoute - profile:", !!profile);
+
+  if (isLoading) {
+    return <LoadingSpinner message="Загрузка профиля..." />;
+  }
 
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  // If we haven't checked yet and not currently loading, redirect to login to trigger check
-  if (!isProfileChecked && !isLoading) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // Show loading only if currently checking
-  if (!isProfileChecked && isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Checking profile...</div>
-      </div>
-    );
-  }
-
-  // We've checked and user doesn't have profile
-  if (isProfileChecked && !hasProfile) {
+  if (!profile) {
     return <Navigate to="/create-profile" replace />;
   }
 
@@ -71,6 +65,7 @@ function App() {
               <Route path="/orders/:orderId" element={<DetailedOrder />} />
               <Route path="/trucks/:truckId" element={<DetailedTruck />} />
               <Route path="/trucks" element={<Trucks />} />
+              <Route path="/exporters-catalog" element={<ExportersCatalog />} />
               <Route
                 path="/profile"
                 element={
@@ -103,14 +98,7 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/exporters-catalog"
-                element={
-                  <PrivateRoute>
-                    <ExportersCatalog />
-                  </PrivateRoute>
-                }
-              />
+
               <Route
                 path="/my-orders"
                 element={
