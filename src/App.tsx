@@ -65,14 +65,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-              <Route
-                path="/create-profile"
-                element={
-                  <PrivateRoute>
-                    <CreateProfile />
-                  </PrivateRoute>
-                }
-              />
+              <Route path="/create-profile" element={<CreateProfile />} />
 
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:orderId" element={<DetailedOrder />} />
