@@ -477,7 +477,6 @@ const PostCargo: React.FC = () => {
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
             )}
@@ -729,7 +728,8 @@ const PostCargo: React.FC = () => {
                                   type="checkbox"
                                   checked={
                                     (children.length === 0 && isParentSelected) ||
-                                    (children.length > 0 && selectedChildrenCount === children.length)
+                                    (children.length > 0 &&
+                                      selectedChildrenCount === children.length)
                                   }
                                   ref={(el) => {
                                     if (el) el.indeterminate = isIndeterminate;
