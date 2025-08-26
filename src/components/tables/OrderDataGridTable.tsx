@@ -9,19 +9,10 @@ import OrdersFilter from "@/components/filters/OrdersFilter";
 import { useOrdersFilter } from "@/hooks/useOrdersFilter";
 import type { LoadPackage } from "@/types/models/cargoOwner/loadPackage";
 import type { LoadType } from "@/types/models/cargoOwner/loadType";
-import {
-  Package,
-  MapPin,
-  DollarSign,
-  Weight,
-  Building,
-  User,
-} from "lucide-react";
+import { Package, MapPin, DollarSign, Weight, Building, User } from "lucide-react";
 
 // Компонент для отображения названия loadType
-const LoadTypeName: React.FC<{ loadType?: Order["loadType"] }> = ({
-  loadType,
-}) => {
+const LoadTypeName: React.FC<{ loadType?: Order["loadType"] }> = ({ loadType }) => {
   const { getLocalizedText, t } = useLocalization();
 
   const loadTypeData: LoadType = loadType as LoadType;
@@ -29,15 +20,11 @@ const LoadTypeName: React.FC<{ loadType?: Order["loadType"] }> = ({
   if (!loadType) return <span>{t.common.notSpecified}</span>;
 
   if (typeof loadType === "object") {
-    return (
-      <span>{getLocalizedText(loadType.name, t.common.notSpecified)}</span>
-    );
+    return <span>{getLocalizedText(loadType.name, t.common.notSpecified)}</span>;
   }
 
   if (typeof loadType === "string" && loadTypeData) {
-    return (
-      <span>{getLocalizedText(loadTypeData.name, t.common.notSpecified)}</span>
-    );
+    return <span>{getLocalizedText(loadTypeData.name, t.common.notSpecified)}</span>;
   }
 
   return <span>{loadType}</span>;
@@ -58,9 +45,7 @@ const LoadPackageName: React.FC<{ loadPackage?: Order["loadPackage"] }> = ({
   }
 
   if (typeof loadPackage === "string" && loadPackageData) {
-    return (
-      <span>{getLocalizedText(loadPackageData.name, t.common.standard)}</span>
-    );
+    return <span>{getLocalizedText(loadPackageData.name, t.common.standard)}</span>;
   }
 
   return <span>{loadPackage}</span>;
@@ -92,8 +77,7 @@ const OrderDataGridTable: React.FC = () => {
   const navigate = useNavigate();
   const { t, getLocalizedText, formatWeight } = useLocalization();
 
-  const { filters, cleanFilters, hasActiveFilters, updateFilters } =
-    useOrdersFilter();
+  const { filters, cleanFilters, hasActiveFilters, updateFilters } = useOrdersFilter();
 
   const {
     data: filteredOrders,
@@ -116,8 +100,7 @@ const OrderDataGridTable: React.FC = () => {
   const error = hasActiveFilters ? filterError : allError;
 
   const formatDimensions = (dimensions: Order["dimensions"]) => {
-    if (!dimensions || typeof dimensions !== "object")
-      return t.common.notDimensioned;
+    if (!dimensions || typeof dimensions !== "object") return t.common.notDimensioned;
     const { length, width, height } = dimensions;
     if (!length || !width || !height) return t.common.notDimensioned;
     return `${length}×${width}×${height}м`;
@@ -131,9 +114,7 @@ const OrderDataGridTable: React.FC = () => {
           return (
             t.status.readyFrom +
             " " +
-            (status.readyFrom
-              ? new Date(status.readyFrom).toLocaleDateString()
-              : "")
+            (status.readyFrom ? new Date(status.readyFrom).toLocaleDateString() : "")
           );
         case "always":
           return t.status.always;
@@ -147,10 +128,7 @@ const OrderDataGridTable: React.FC = () => {
     }
   };
 
-  const getObjectName = (
-    obj: any,
-    fallback: string = t.common.notSpecified
-  ): string => {
+  const getObjectName = (obj: any, fallback: string = t.common.notSpecified): string => {
     if (!obj) return fallback;
     if (typeof obj === "string") return obj;
 
@@ -197,11 +175,14 @@ const OrderDataGridTable: React.FC = () => {
       minWidth: 10,
       resizable: true,
       sortable: false,
-      flex: 1,
+      flex: 1.5,
       renderCell: (params: GridRenderCellParams) => (
         <div className="py-2">
           <div className="flex items-center gap-2">
-            <Package size={16} className="text-blue-600" />
+            <Package
+              size={16}
+              className="text-blue-600"
+            />
             <span className="text-sm font-medium text-gray-900">
               {params.value || t.common.noTitle}
             </span>
@@ -215,7 +196,7 @@ const OrderDataGridTable: React.FC = () => {
       headerName: t.ordersTable.headers.characteristics,
       //width: getColumnWidth(30),
       minWidth: 10,
-      flex: 2,
+      flex: 1.5,
       resizable: true,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
@@ -257,8 +238,7 @@ const OrderDataGridTable: React.FC = () => {
         const pricingTypeText = pricing.pricingType
           ? typeof pricing.pricingType === "string"
             ? pricing.pricingType
-            : typeof pricing.pricingType === "object" &&
-              pricing.pricingType.name
+            : typeof pricing.pricingType === "object" && pricing.pricingType.name
             ? getLocalizedText(pricing.pricingType.name)
             : pricing.pricingType._id || "Pricing Type"
           : t.common.som;
@@ -308,7 +288,10 @@ const OrderDataGridTable: React.FC = () => {
       renderCell: (params: GridRenderCellParams) => (
         <div className="py-2">
           <div className="flex items-center gap-1">
-            <MapPin size={16} className="text-green-600" />
+            <MapPin
+              size={16}
+              className="text-green-600"
+            />
             <span className="text-sm text-gray-900">
               {params.row.loadAddress?.display_place || t.common.notSpecified}
               {params.row.loadAddress?.country &&
@@ -334,7 +317,10 @@ const OrderDataGridTable: React.FC = () => {
       renderCell: (params: GridRenderCellParams) => (
         <div className="py-2">
           <div className="flex items-center gap-1">
-            <MapPin size={16} className="text-red-600" />
+            <MapPin
+              size={16}
+              className="text-red-600"
+            />
             <span className="text-sm text-gray-900">
               {params.row.unloadAddress?.display_place || t.common.notSpecified}
               {params.row.unloadAddress?.country &&
@@ -380,7 +366,10 @@ const OrderDataGridTable: React.FC = () => {
           <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="space-y-2">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
+              <div
+                key={i}
+                className="h-16 bg-gray-200 rounded"
+              ></div>
             ))}
           </div>
         </div>
@@ -392,12 +381,8 @@ const OrderDataGridTable: React.FC = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <h3 className="text-red-800 font-medium">
-            {t.ordersTable.error.title}
-          </h3>
-          <p className="text-red-600 text-sm mt-1">
-            {t.ordersTable.error.message}
-          </p>
+          <h3 className="text-red-800 font-medium">{t.ordersTable.error.title}</h3>
+          <p className="text-red-600 text-sm mt-1">{t.ordersTable.error.message}</p>
         </div>
       </div>
     );
@@ -420,7 +405,10 @@ const OrderDataGridTable: React.FC = () => {
   return (
     <div className="p-6">
       {/* Фильтры заказов */}
-      <OrdersFilter currentFilters={filters} onFiltersChange={updateFilters} />
+      <OrdersFilter
+        currentFilters={filters}
+        onFiltersChange={updateFilters}
+      />
 
       <div className="bg-white shadow-sm rounded-lg overflow-hidden">
         <div style={{ height: 600, width: "100%" }}>
@@ -497,8 +485,8 @@ const OrderDataGridTable: React.FC = () => {
         <div className="text-sm text-gray-700">
           {hasActiveFilters ? (
             <>
-              Найдено <span className="font-medium">{orders?.length || 0}</span>{" "}
-              заказов по фильтрам
+              Найдено <span className="font-medium">{orders?.length || 0}</span> заказов
+              по фильтрам
             </>
           ) : (
             <>

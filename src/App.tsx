@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import React from "react";
 import Home from "./pages/Home";
 import Header from "./components/layout/Header";
@@ -29,7 +24,7 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAppSelector((state) => state.authToken.token);
   const profile = useAppSelector((state) => state.profile.profile);
   const { isLoading } = useDelayedProfileFetch();
-  
+
   console.log("🔥 PrivateRoute - isLoading:", isLoading);
   console.log("🔥 PrivateRoute - token:", !!token);
   console.log("🔥 PrivateRoute - profile:", !!profile);
@@ -39,11 +34,21 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
   }
 
   if (!profile) {
-    return <Navigate to="/create-profile" replace />;
+    return (
+      <Navigate
+        to="/create-profile"
+        replace
+      />
+    );
   }
 
   return <>{children}</>;
@@ -57,15 +62,39 @@ function App() {
           <Header />
           <main>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/create-profile" element={<CreateProfile />} />
+              <Route
+                path="/"
+                element={<Home />}
+              />
+              <Route
+                path="/login"
+                element={<Login />}
+              />
+              <Route
+                path="/create-profile"
+                element={<CreateProfile />}
+              />
 
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/orders/:orderId" element={<DetailedOrder />} />
-              <Route path="/trucks/:truckId" element={<DetailedTruck />} />
-              <Route path="/trucks" element={<Trucks />} />
-              <Route path="/exporters-catalog" element={<ExportersCatalog />} />
+              <Route
+                path="/orders"
+                element={<Orders />}
+              />
+              <Route
+                path="/orders/:orderId"
+                element={<DetailedOrder />}
+              />
+              <Route
+                path="/trucks/:truckId"
+                element={<DetailedTruck />}
+              />
+              <Route
+                path="/trucks"
+                element={<Trucks />}
+              />
+              <Route
+                path="/exporters-catalog"
+                element={<ExportersCatalog />}
+              />
               <Route
                 path="/profile"
                 element={

@@ -46,7 +46,7 @@ export const useDelayedProfileFetch = () => {
           dispatch(clearProfile());
         }
         setIsLoading(false);
-      }, 3000); // 3 seconds timeout
+      }, 2000); // 3 seconds timeout
 
       return () => clearTimeout(timeoutId);
     } else {

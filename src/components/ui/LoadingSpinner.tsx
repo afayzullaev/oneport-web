@@ -19,7 +19,10 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     >
       <div className="flex flex-col items-center justify-center space-y-3">
         <div className="animate-spin">
-          <Loader2 size={size} className="text-blue-600" strokeWidth={2.5} />
+          <Loader2
+size={size}
+className="text-blue-600"
+strokeWidth={2.5} />
         </div>
         {message && (
           <p className="text-sm text-gray-600 font-medium">{message}</p>

@@ -92,8 +92,16 @@ const ExportersTable: React.FC = () => {
     return (
       <div className="bg-white rounded-xl shadow-lg p-8 text-center">
         <div className="text-red-500 mb-4">
-          <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+className="w-16 h-16 mx-auto mb-4"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24">
+            <path
+strokeLinecap="round"
+strokeLinejoin="round"
+strokeWidth={2}
+d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
         <h3 className="text-xl font-semibold text-gray-900 mb-2">{t.exportersCatalog.error.title}</h3>
@@ -112,8 +120,16 @@ const ExportersTable: React.FC = () => {
     return (
       <div className="bg-white rounded-xl shadow-lg p-8 text-center">
         <div className="text-gray-400 mb-4">
-          <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <svg
+className="w-16 h-16 mx-auto mb-4"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24">
+            <path
+strokeLinecap="round"
+strokeLinejoin="round"
+strokeWidth={1}
+d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
         <h3 className="text-xl font-semibold text-gray-900 mb-2">{t.exportersCatalog.empty.title}</h3>
@@ -171,7 +187,9 @@ const ExportersTable: React.FC = () => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {exporters?.map((exporter) => (
-              <tr key={exporter._id} className="hover:bg-gray-50">
+              <tr
+key={exporter._id}
+className="hover:bg-gray-50">
                 {/* Company Info */}
                 <td className="px-6 py-4">
                   <div>
@@ -193,7 +211,9 @@ const ExportersTable: React.FC = () => {
 
                 {/* Activity - with line clamp for max 3 rows */}
                 <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900 break-words" style={{
+                  <div
+className="text-sm text-gray-900 break-words"
+style={{
                     display: '-webkit-box',
                     WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical',
@@ -242,8 +262,14 @@ const ExportersTable: React.FC = () => {
                       {exporter.country || t.common.notSpecified}
                     </span>
                     {exporter.isVerified && (
-                      <svg className="w-4 h-4 text-green-500 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      <svg
+className="w-4 h-4 text-green-500 ml-2 flex-shrink-0"
+fill="currentColor"
+viewBox="0 0 20 20">
+                        <path
+fillRule="evenodd"
+d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+clipRule="evenodd" />
                       </svg>
                     )}
                   </div>
@@ -253,7 +279,9 @@ const ExportersTable: React.FC = () => {
                 <td className="px-6 py-4">
                   <div className="space-y-1">
                     {formatContacts(exporter).map((contact, index) => (
-                      <div key={index} className="text-sm break-words">
+                      <div
+key={index}
+className="text-sm break-words">
                         {contact.includes("@") ? (
                           <a
                             href={`mailto:${contact}`}

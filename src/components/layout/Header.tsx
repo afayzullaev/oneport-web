@@ -74,27 +74,40 @@ const Header: React.FC = () => {
     <header className="sticky top-0 z-40 w-full border-b bg-white shadow-md items-center">
       <div className="w-full flex h-16 items-center justify-between px-0">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 pl-4 md:pl-8">
-          <img src="/favicon.ico" alt="1Port Logo" className="h-8 w-8" />
+        <Link
+to="/"
+className="flex items-center gap-2 pl-4 md:pl-8">
+          <img
+src="/favicon.ico"
+alt="1Port Logo"
+className="h-8 w-8" />
           <span className="text-2xl font-bold text-gray-900">1Port</span>
         </Link>
 
         {/* Navigation - only show when signed in */}
 
         <nav className="hidden gap-2 lg:flex">
-          <Link to="/trucks" className={getNavLinkClasses("/trucks")}>
+          <Link
+to="/trucks"
+className={getNavLinkClasses("/trucks")}>
             <Search size={18} />
             <span>{t.header.findCars}</span>
           </Link>
-          <Link to="/orders" className={getNavLinkClasses("/orders")}>
+          <Link
+to="/orders"
+className={getNavLinkClasses("/orders")}>
             <Cube size={18} />
             <span>{t.header.findCargos}</span>
           </Link>
-          <Link to="/post-truck" className={getNavLinkClasses("/post-truck")}>
+          <Link
+to="/post-truck"
+className={getNavLinkClasses("/post-truck")}>
             <Plus size={18} />
             <span>{t.header.postCar}</span>
           </Link>
-          <Link to="/post-cargo" className={getNavLinkClasses("/post-cargo")}>
+          <Link
+to="/post-cargo"
+className={getNavLinkClasses("/post-cargo")}>
             <Plus size={18} />
             <span>{t.header.postCargo}</span>
           </Link>
@@ -107,7 +120,9 @@ const Header: React.FC = () => {
 
           {isSignedIn ? (
             // Signed in - show user dropdown menu
-            <div className="relative" ref={dropdownRef}>
+            <div
+className="relative"
+ref={dropdownRef}>
               <Button
                 variant="outline"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -178,7 +193,9 @@ const Header: React.FC = () => {
           ) : (
             // Not signed in - show sign in button
             <Link to="/login">
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button
+variant="outline"
+className="flex items-center gap-2">
                 <User size={18} />
                 {t.header.signIn}
               </Button>

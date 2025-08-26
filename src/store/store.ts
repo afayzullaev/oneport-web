@@ -1,9 +1,5 @@
 // src/store/store.ts
-import {
-  configureStore,
-  createSlice,
-  type PayloadAction,
-} from "@reduxjs/toolkit";
+import { configureStore, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authApi } from "../api/authApi";
@@ -72,14 +68,8 @@ const profilePersistConfig = {
   blacklist: ["profile", "hasProfile", "profileFetched"], // Don't persist anything
 };
 
-const persistedAuthReducer = persistReducer(
-  persistConfig,
-  authTokenSlice.reducer
-);
-const persistedProfileReducer = persistReducer(
-  profilePersistConfig,
-  profileReducer
-);
+const persistedAuthReducer = persistReducer(persistConfig, authTokenSlice.reducer);
+const persistedProfileReducer = persistReducer(profilePersistConfig, profileReducer);
 
 export const store = configureStore({
   reducer: {

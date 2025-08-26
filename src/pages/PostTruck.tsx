@@ -53,7 +53,14 @@ interface FormData {
   readyType: {
     type: "always" | "ready_from";
     readyFrom?: Date;
-    interval?: "every_day" | "twice_a_week" | "every_week" | "every_month" | "often" | "contract_based" | "in_working_days";
+    interval?:
+      | "every_day"
+      | "twice_a_week"
+      | "every_week"
+      | "every_month"
+      | "often"
+      | "contract_based"
+      | "in_working_days";
   };
   bid: "yes" | "ask";
   pricing?: {
@@ -115,13 +122,13 @@ const PostTruck: React.FC = () => {
   ];
 
   const updateFormData = (field: keyof FormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const updateNestedFormData = (field: keyof FormData, subField: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: { ...(prev[field] as any), [subField]: value }
+      [field]: { ...(prev[field] as any), [subField]: value },
     }));
   };
 
@@ -138,51 +145,58 @@ const PostTruck: React.FC = () => {
         trailer_dimensions: formData.trailer_dimensions,
         features: formData.features,
         fromRadius: formData.fromRadius,
-        fromAddress: formData.fromAddress ? {
-          osm_id: formData.fromAddress.osm_id || "",
-          lat: Number(formData.fromAddress.lat) || 0,
-          lon: Number(formData.fromAddress.lon) || 0,
-          display_name: formData.fromAddress.display_name || "",
-          display_place: formData.fromAddress.display_place || "",
-          display_address: formData.fromAddress.display_address || "",
-          name: formData.fromAddress.display_place || "",
-          country: formData.fromAddress.address?.country || "",
-          state: formData.fromAddress.address?.state || "",
-          county: formData.fromAddress.address?.county || "",
-          postcode: formData.fromAddress.address?.postcode || "",
-          country_code: formData.fromAddress.address?.country_code || "",
-          place_id: formData.fromAddress.place_id || "",
-        } : undefined,
+        fromAddress: formData.fromAddress
+          ? {
+              osm_id: formData.fromAddress.osm_id || "",
+              lat: Number(formData.fromAddress.lat) || 0,
+              lon: Number(formData.fromAddress.lon) || 0,
+              display_name: formData.fromAddress.display_name || "",
+              display_place: formData.fromAddress.display_place || "",
+              display_address: formData.fromAddress.display_address || "",
+              name: formData.fromAddress.display_place || "",
+              country: formData.fromAddress.address?.country || "",
+              state: formData.fromAddress.address?.state || "",
+              county: formData.fromAddress.address?.county || "",
+              postcode: formData.fromAddress.address?.postcode || "",
+              country_code: formData.fromAddress.address?.country_code || "",
+              place_id: formData.fromAddress.place_id || "",
+            }
+          : undefined,
         toRadius: formData.toRadius,
-        toAddress: formData.toAddress ? {
-          osm_id: formData.toAddress.osm_id || "",
-          lat: Number(formData.toAddress.lat) || 0,
-          lon: Number(formData.toAddress.lon) || 0,
-          display_name: formData.toAddress.display_name || "",
-          display_place: formData.toAddress.display_place || "",
-          display_address: formData.toAddress.display_address || "",
-          name: formData.toAddress.display_place || "",
-          country: formData.toAddress.address?.country || "",
-          state: formData.toAddress.address?.state || "",
-          county: formData.toAddress.address?.county || "",
-          postcode: formData.toAddress.address?.postcode || "",
-          country_code: formData.toAddress.address?.country_code || "",
-          place_id: formData.toAddress.place_id || "",
-        } : undefined,
+        toAddress: formData.toAddress
+          ? {
+              osm_id: formData.toAddress.osm_id || "",
+              lat: Number(formData.toAddress.lat) || 0,
+              lon: Number(formData.toAddress.lon) || 0,
+              display_name: formData.toAddress.display_name || "",
+              display_place: formData.toAddress.display_place || "",
+              display_address: formData.toAddress.display_address || "",
+              name: formData.toAddress.display_place || "",
+              country: formData.toAddress.address?.country || "",
+              state: formData.toAddress.address?.state || "",
+              county: formData.toAddress.address?.county || "",
+              postcode: formData.toAddress.address?.postcode || "",
+              country_code: formData.toAddress.address?.country_code || "",
+              place_id: formData.toAddress.place_id || "",
+            }
+          : undefined,
         gpsMonitoring: formData.gpsMonitoring,
         readyType: formData.readyType,
         bid: formData.bid,
-        pricing: formData.pricing && formData.pricing.pricingType ? {
-          withVat: formData.pricing.withVat,
-          withoutVat: formData.pricing.withoutVat,
-          pricingType: formData.pricing.pricingType,
-          cash: formData.pricing.cash,
-        } : undefined,
+        pricing:
+          formData.pricing && formData.pricing.pricingType
+            ? {
+                withVat: formData.pricing.withVat,
+                withoutVat: formData.pricing.withoutVat,
+                pricingType: formData.pricing.pricingType,
+                cash: formData.pricing.cash,
+              }
+            : undefined,
       };
 
       await createTruck(truckData).unwrap();
-      navigate("/trucks", { 
-        state: { message: t.postTruck.validation.createTruckSuccess }
+      navigate("/trucks", {
+        state: { message: t.postTruck.validation.createTruckSuccess },
       });
     } catch (error) {
       console.error("Failed to create truck:", error);
@@ -193,9 +207,17 @@ const PostTruck: React.FC = () => {
   const isStepValid = (step: number): boolean => {
     switch (step) {
       case 1:
-        return !!(formData.truckNumber && formData.loadCapacity > 0 && formData.volume > 0);
+        return !!(
+          formData.truckNumber &&
+          formData.loadCapacity > 0 &&
+          formData.volume >= 0
+        );
       case 2:
-        return !!(formData.dimensions.length > 0 && formData.dimensions.width > 0 && formData.dimensions.height > 0);
+        return !!(
+          formData.dimensions.length > 0 &&
+          formData.dimensions.width > 0 &&
+          formData.dimensions.height > 0
+        );
       case 3:
         return true; // Optional step
       case 4:
@@ -207,13 +229,13 @@ const PostTruck: React.FC = () => {
 
   const nextStep = () => {
     if (isStepValid(currentStep) && currentStep < 4) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
   };
 
@@ -238,37 +260,45 @@ const PostTruck: React.FC = () => {
               const isValid = isStepValid(step.id);
 
               return (
-                <div key={step.id} className="flex items-center">
-                  <div className={`
+                <div
+                  key={step.id}
+                  className="flex items-center"
+                >
+                  <div
+                    className={`
                     flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all shrink-0
-                    ${isActive 
-                      ? 'bg-blue-600 border-blue-600 text-white' 
-                      : isCompleted 
-                        ? 'bg-green-600 border-green-600 text-white'
+                    ${
+                      isActive
+                        ? "bg-blue-600 border-blue-600 text-white"
+                        : isCompleted
+                        ? "bg-green-600 border-green-600 text-white"
                         : isValid
-                          ? 'bg-blue-100 border-blue-300 text-blue-600'
-                          : 'bg-gray-100 border-gray-300 text-gray-400'
+                        ? "bg-blue-100 border-blue-300 text-blue-600"
+                        : "bg-gray-100 border-gray-300 text-gray-400"
                     }
-                  `}>
-                    {isCompleted ? (
-                      <Check size={20} />
-                    ) : (
-                      <Icon size={20} />
-                    )}
+                  `}
+                  >
+                    {isCompleted ? <Check size={20} /> : <Icon size={20} />}
                   </div>
                   <div className="ml-3 hidden sm:block">
-                    <p className={`text-sm font-medium ${
-                      isActive ? 'text-blue-600' : 
-                      isCompleted ? 'text-green-600' : 
-                      'text-gray-500'
-                    }`}>
+                    <p
+                      className={`text-sm font-medium ${
+                        isActive
+                          ? "text-blue-600"
+                          : isCompleted
+                          ? "text-green-600"
+                          : "text-gray-500"
+                      }`}
+                    >
                       {step.name}
                     </p>
                   </div>
                   {index < steps.length - 1 && (
-                    <div className={`w-20 h-0.5 mx-4 ${
-                      isCompleted ? 'bg-green-300' : 'bg-gray-200'
-                    }`} />
+                    <div
+                      className={`w-20 h-0.5 mx-4 ${
+                        isCompleted ? "bg-green-300" : "bg-gray-200"
+                      }`}
+                    />
                   )}
                 </div>
               );
@@ -283,8 +313,13 @@ const PostTruck: React.FC = () => {
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <Truck className="text-blue-600" size={24} />
-                  <h2 className="text-2xl font-semibold">{t.postTruck.truckDetails.title}</h2>
+                  <Truck
+                    className="text-blue-600"
+                    size={24}
+                  />
+                  <h2 className="text-2xl font-semibold">
+                    {t.postTruck.truckDetails.title}
+                  </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -309,12 +344,19 @@ const PostTruck: React.FC = () => {
                     </label>
                     <select
                       value={formData.truckOption || ""}
-                      onChange={(e) => updateFormData("truckOption", e.target.value || undefined)}
+                      onChange={(e) =>
+                        updateFormData("truckOption", e.target.value || undefined)
+                      }
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="">{t.postTruck.truckDetails.truckTypePlaceholder}</option>
+                      <option value="">
+                        {t.postTruck.truckDetails.truckTypePlaceholder}
+                      </option>
                       {truckOptions.map((option) => (
-                        <option key={option._id} value={option._id}>
+                        <option
+                          key={option._id}
+                          value={option._id}
+                        >
                           {getLocalizedText(option.name)}
                         </option>
                       ))}
@@ -332,7 +374,10 @@ const PostTruck: React.FC = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       {trailerTypeOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
+                        <option
+                          key={option.value}
+                          value={option.value}
+                        >
                           {option.label}
                         </option>
                       ))}
@@ -347,7 +392,9 @@ const PostTruck: React.FC = () => {
                     <input
                       type="number"
                       value={formData.loadCapacity}
-                      onChange={(e) => updateFormData("loadCapacity", Number(e.target.value))}
+                      onChange={(e) =>
+                        updateFormData("loadCapacity", Number(e.target.value))
+                      }
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder={t.postTruck.truckDetails.loadCapacityPlaceholder}
                       min="0"
@@ -358,7 +405,7 @@ const PostTruck: React.FC = () => {
                   {/* Volume */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t.postTruck.truckDetails.volume} *
+                      {t.postTruck.truckDetails.volume}
                     </label>
                     <input
                       type="number"
@@ -376,43 +423,43 @@ const PostTruck: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-4">
                       {t.postTruck.truckDetails.supportedLoadingMethods}
                     </label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {truckLoadTypes.map((type) => {
-                        if (!type._id) return null;
-                        return (
-                          <label
-                            key={type._id}
-                            className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.loadTypes.includes(type._id)
-                            ? "border-blue-500 bg-blue-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={formData.loadTypes.includes(type._id)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  updateFormData("loadTypes", [...formData.loadTypes, type._id!]);
-                                } else {
-                                  updateFormData("loadTypes", formData.loadTypes.filter(id => id !== type._id));
-                                }
-                              }}
-                              className="sr-only"
-                            />
-                            <div className={`w-5 h-5 shrink-0 border-2 rounded mr-3 flex items-center justify-center ${
-                              formData.loadTypes.includes(type._id)
-                                ? "border-blue-500 bg-blue-500"
-                                : "border-gray-300"
-                            }`}>
-                              {formData.loadTypes.includes(type._id) && (
-                                <Check className="text-white" size={14} />
-                              )}
-                            </div>
-                            <span className="font-medium">{getLocalizedText(type.name)}</span>
-                          </label>
-                        );
-                      })}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Left side - Scrollable load types list */}
+                      <div className="border border-gray-300 rounded-lg p-4 h-64 overflow-y-auto">
+                        <div className="space-y-2">
+                          {truckLoadTypes.map((type) => {
+                            if (!type._id) return null;
+                            return (
+                              <label
+                                key={type._id}
+                                className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={formData.loadTypes.includes(type._id)}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      updateFormData("loadTypes", [
+                                        ...formData.loadTypes,
+                                        type._id!,
+                                      ]);
+                                    } else {
+                                      updateFormData(
+                                        "loadTypes",
+                                        formData.loadTypes.filter((id) => id !== type._id)
+                                      );
+                                    }
+                                  }}
+                                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                />
+                                <span className="ml-3 text-sm font-medium text-gray-700">
+                                  {getLocalizedText(type.name)}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -423,8 +470,13 @@ const PostTruck: React.FC = () => {
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <Package className="text-blue-600" size={24} />
-                  <h2 className="text-2xl font-semibold">{t.postTruck.specifications.title}</h2>
+                  <Package
+                    className="text-blue-600"
+                    size={24}
+                  />
+                  <h2 className="text-2xl font-semibold">
+                    {t.postTruck.specifications.title}
+                  </h2>
                 </div>
 
                 {/* Truck Dimensions */}
@@ -437,7 +489,13 @@ const PostTruck: React.FC = () => {
                       <input
                         type="number"
                         value={formData.dimensions.length}
-                        onChange={(e) => updateNestedFormData("dimensions", "length", Number(e.target.value))}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "dimensions",
+                            "length",
+                            Number(e.target.value)
+                          )
+                        }
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={t.postTruck.specifications.lengthPlaceholder}
                         min="0"
@@ -448,7 +506,13 @@ const PostTruck: React.FC = () => {
                       <input
                         type="number"
                         value={formData.dimensions.width}
-                        onChange={(e) => updateNestedFormData("dimensions", "width", Number(e.target.value))}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "dimensions",
+                            "width",
+                            Number(e.target.value)
+                          )
+                        }
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={t.postTruck.specifications.widthPlaceholder}
                         min="0"
@@ -459,7 +523,13 @@ const PostTruck: React.FC = () => {
                       <input
                         type="number"
                         value={formData.dimensions.height}
-                        onChange={(e) => updateNestedFormData("dimensions", "height", Number(e.target.value))}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "dimensions",
+                            "height",
+                            Number(e.target.value)
+                          )
+                        }
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={t.postTruck.specifications.heightPlaceholder}
                         min="0"
@@ -470,7 +540,8 @@ const PostTruck: React.FC = () => {
                 </div>
 
                 {/* Trailer Dimensions */}
-                {(formData.trailerType === "trailer" || formData.trailerType === "semi_trailer") && (
+                {(formData.trailerType === "trailer" ||
+                  formData.trailerType === "semi_trailer") && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-4">
                       {t.postTruck.specifications.trailerDimensions}
@@ -480,7 +551,13 @@ const PostTruck: React.FC = () => {
                         <input
                           type="number"
                           value={formData.trailer_dimensions.length}
-                          onChange={(e) => updateNestedFormData("trailer_dimensions", "length", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "trailer_dimensions",
+                              "length",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder={t.postTruck.specifications.lengthPlaceholder}
                           min="0"
@@ -491,7 +568,13 @@ const PostTruck: React.FC = () => {
                         <input
                           type="number"
                           value={formData.trailer_dimensions.width}
-                          onChange={(e) => updateNestedFormData("trailer_dimensions", "width", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "trailer_dimensions",
+                              "width",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder={t.postTruck.specifications.widthPlaceholder}
                           min="0"
@@ -502,7 +585,13 @@ const PostTruck: React.FC = () => {
                         <input
                           type="number"
                           value={formData.trailer_dimensions.height}
-                          onChange={(e) => updateNestedFormData("trailer_dimensions", "height", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "trailer_dimensions",
+                              "height",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder={t.postTruck.specifications.heightPlaceholder}
                           min="0"
@@ -516,7 +605,10 @@ const PostTruck: React.FC = () => {
                 {/* Features */}
                 <div className="p-6 bg-gray-50 rounded-lg">
                   <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                    <Settings className="text-blue-600" size={20} />
+                    <Settings
+                      className="text-blue-600"
+                      size={20}
+                    />
                     {t.postTruck.specifications.specialFeatures}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -524,7 +616,9 @@ const PostTruck: React.FC = () => {
                       <input
                         type="checkbox"
                         checked={formData.features.tailgate}
-                        onChange={(e) => updateNestedFormData("features", "tailgate", e.target.checked)}
+                        onChange={(e) =>
+                          updateNestedFormData("features", "tailgate", e.target.checked)
+                        }
                         className="mr-3"
                       />
                       <span>{t.postTruck.specifications.tailgate}</span>
@@ -533,7 +627,13 @@ const PostTruck: React.FC = () => {
                       <input
                         type="checkbox"
                         checked={formData.features.hydraulicLift}
-                        onChange={(e) => updateNestedFormData("features", "hydraulicLift", e.target.checked)}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "features",
+                            "hydraulicLift",
+                            e.target.checked
+                          )
+                        }
                         className="mr-3"
                       />
                       <span>{t.postTruck.specifications.hydraulicLift}</span>
@@ -542,7 +642,9 @@ const PostTruck: React.FC = () => {
                       <input
                         type="checkbox"
                         checked={formData.features.cones}
-                        onChange={(e) => updateNestedFormData("features", "cones", e.target.checked)}
+                        onChange={(e) =>
+                          updateNestedFormData("features", "cones", e.target.checked)
+                        }
                         className="mr-3"
                       />
                       <span>{t.postTruck.specifications.safetyCones}</span>
@@ -553,13 +655,17 @@ const PostTruck: React.FC = () => {
                 {/* GPS Monitoring */}
                 <div className="p-6 bg-gray-50 rounded-lg">
                   <div className="flex items-center gap-3 mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">{t.postTruck.specifications.gpsMonitoring}</h3>
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {t.postTruck.specifications.gpsMonitoring}
+                    </h3>
                   </div>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={formData.gpsMonitoring.enabled}
-                      onChange={(e) => updateNestedFormData("gpsMonitoring", "enabled", e.target.checked)}
+                      onChange={(e) =>
+                        updateNestedFormData("gpsMonitoring", "enabled", e.target.checked)
+                      }
                       className="mr-3"
                     />
                     <span>{t.postTruck.specifications.gpsAvailable}</span>
@@ -569,7 +675,13 @@ const PostTruck: React.FC = () => {
                       <input
                         type="text"
                         value={formData.gpsMonitoring.provider || ""}
-                        onChange={(e) => updateNestedFormData("gpsMonitoring", "provider", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "gpsMonitoring",
+                            "provider",
+                            e.target.value
+                          )
+                        }
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={t.postTruck.specifications.gpsProviderPlaceholder}
                       />
@@ -583,7 +695,10 @@ const PostTruck: React.FC = () => {
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <MapPin className="text-blue-600" size={24} />
+                  <MapPin
+                    className="text-blue-600"
+                    size={24}
+                  />
                   <h2 className="text-2xl font-semibold">{t.postTruck.routes.title}</h2>
                 </div>
 
@@ -614,7 +729,9 @@ const PostTruck: React.FC = () => {
                       <input
                         type="number"
                         value={formData.fromRadius}
-                        onChange={(e) => updateFormData("fromRadius", Number(e.target.value))}
+                        onChange={(e) =>
+                          updateFormData("fromRadius", Number(e.target.value))
+                        }
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="0"
                         min="0"
@@ -648,7 +765,9 @@ const PostTruck: React.FC = () => {
                       <input
                         type="number"
                         value={formData.toRadius}
-                        onChange={(e) => updateFormData("toRadius", Number(e.target.value))}
+                        onChange={(e) =>
+                          updateFormData("toRadius", Number(e.target.value))
+                        }
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="0"
                         min="0"
@@ -660,22 +779,31 @@ const PostTruck: React.FC = () => {
                 {/* Availability */}
                 <div className="mt-8 space-y-4">
                   <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
-                    <Calendar className="text-blue-600" size={20} />
+                    <Calendar
+                      className="text-blue-600"
+                      size={20}
+                    />
                     {t.postTruck.routes.truckAvailability}
                   </h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                       <input
                         type="radio"
                         value="always"
                         checked={formData.readyType.type === "always"}
-                        onChange={(e) => updateNestedFormData("readyType", "type", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedFormData("readyType", "type", e.target.value)
+                        }
                         className="mr-3"
                       />
                       <div>
-                        <p className="font-medium">{t.postTruck.routes.alwaysAvailable}</p>
-                        <p className="text-sm text-gray-500">{t.postTruck.routes.alwaysAvailableDesc}</p>
+                        <p className="font-medium">
+                          {t.postTruck.routes.alwaysAvailable}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {t.postTruck.routes.alwaysAvailableDesc}
+                        </p>
                       </div>
                     </label>
 
@@ -684,12 +812,18 @@ const PostTruck: React.FC = () => {
                         type="radio"
                         value="ready_from"
                         checked={formData.readyType.type === "ready_from"}
-                        onChange={(e) => updateNestedFormData("readyType", "type", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedFormData("readyType", "type", e.target.value)
+                        }
                         className="mr-3"
                       />
                       <div>
-                        <p className="font-medium">{t.postTruck.routes.availableFromDate}</p>
-                        <p className="text-sm text-gray-500">{t.postTruck.routes.availableFromDateDesc}</p>
+                        <p className="font-medium">
+                          {t.postTruck.routes.availableFromDate}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {t.postTruck.routes.availableFromDateDesc}
+                        </p>
                       </div>
                     </label>
                   </div>
@@ -702,8 +836,20 @@ const PostTruck: React.FC = () => {
                         </label>
                         <input
                           type="date"
-                          value={formData.readyType.readyFrom ? new Date(formData.readyType.readyFrom).toISOString().split('T')[0] : ""}
-                          onChange={(e) => updateNestedFormData("readyType", "readyFrom", new Date(e.target.value))}
+                          value={
+                            formData.readyType.readyFrom
+                              ? new Date(formData.readyType.readyFrom)
+                                  .toISOString()
+                                  .split("T")[0]
+                              : ""
+                          }
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "readyType",
+                              "readyFrom",
+                              new Date(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                       </div>
@@ -713,12 +859,23 @@ const PostTruck: React.FC = () => {
                         </label>
                         <select
                           value={formData.readyType.interval || ""}
-                          onChange={(e) => updateNestedFormData("readyType", "interval", e.target.value || undefined)}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "readyType",
+                              "interval",
+                              e.target.value || undefined
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
-                          <option value="">{t.postTruck.routes.frequencyPlaceholder}</option>
+                          <option value="">
+                            {t.postTruck.routes.frequencyPlaceholder}
+                          </option>
                           {intervalOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
+                            <option
+                              key={option.value}
+                              value={option.value}
+                            >
                               {option.label}
                             </option>
                           ))}
@@ -734,7 +891,10 @@ const PostTruck: React.FC = () => {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <DollarSign className="text-blue-600" size={24} />
+                  <DollarSign
+                    className="text-blue-600"
+                    size={24}
+                  />
                   <h2 className="text-2xl font-semibold">{t.postTruck.pricing.title}</h2>
                 </div>
 
@@ -778,7 +938,13 @@ const PostTruck: React.FC = () => {
                         <input
                           type="number"
                           value={formData.pricing?.withoutVat || ""}
-                          onChange={(e) => updateNestedFormData("pricing", "withoutVat", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "pricing",
+                              "withoutVat",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder="0"
                           min="0"
@@ -791,7 +957,13 @@ const PostTruck: React.FC = () => {
                         <input
                           type="number"
                           value={formData.pricing?.withVat || ""}
-                          onChange={(e) => updateNestedFormData("pricing", "withVat", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "pricing",
+                              "withVat",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder="0"
                           min="0"
@@ -804,7 +976,13 @@ const PostTruck: React.FC = () => {
                         <input
                           type="number"
                           value={formData.pricing?.cash || ""}
-                          onChange={(e) => updateNestedFormData("pricing", "cash", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "pricing",
+                              "cash",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder="0"
                           min="0"
@@ -819,12 +997,23 @@ const PostTruck: React.FC = () => {
                       </label>
                       <select
                         value={formData.pricing?.pricingType || ""}
-                        onChange={(e) => updateNestedFormData("pricing", "pricingType", e.target.value || undefined)}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "pricing",
+                            "pricingType",
+                            e.target.value || undefined
+                          )
+                        }
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <option value="">{t.postTruck.pricing.pricingMethodPlaceholder}</option>
+                        <option value="">
+                          {t.postTruck.pricing.pricingMethodPlaceholder}
+                        </option>
                         {pricingTypes.map((type) => (
-                          <option key={type._id} value={type._id}>
+                          <option
+                            key={type._id}
+                            value={type._id}
+                          >
                             {getLocalizedText(type.name)}
                           </option>
                         ))}
@@ -834,16 +1023,22 @@ const PostTruck: React.FC = () => {
                 )}
 
                 {/* Summary Card */}
-                                {/* Summary Card */}
+                {/* Summary Card */}
                 <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-4">{t.postTruck.summary.title}</h3>
+                  <h3 className="text-lg font-semibold text-blue-900 mb-4">
+                    {t.postTruck.summary.title}
+                  </h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-blue-700">{t.postTruck.summary.truckNumber}</span>
+                      <span className="text-blue-700">
+                        {t.postTruck.summary.truckNumber}
+                      </span>
                       <span className="font-medium">{formData.truckNumber}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-700">{t.postTruck.summary.capacity}</span>
+                      <span className="text-blue-700">
+                        {t.postTruck.summary.capacity}
+                      </span>
                       <span className="font-medium">{formData.loadCapacity} tons</span>
                     </div>
                     <div className="flex justify-between">
@@ -853,17 +1048,24 @@ const PostTruck: React.FC = () => {
                     <div className="flex justify-between">
                       <span className="text-blue-700">{t.postTruck.summary.route}</span>
                       <span className="font-medium">
-                        {formData.fromAddress?.display_place || t.postTruck.summary.any} → {formData.toAddress?.display_place || t.postTruck.summary.any}
+                        {formData.fromAddress?.display_place || t.postTruck.summary.any} →{" "}
+                        {formData.toAddress?.display_place || t.postTruck.summary.any}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-700">{t.postTruck.summary.loadTypes}</span>
-                      <span className="font-medium">{formData.loadTypes.length} {t.postTruck.summary.selected}</span>
+                      <span className="text-blue-700">
+                        {t.postTruck.summary.loadTypes}
+                      </span>
+                      <span className="font-medium">
+                        {formData.loadTypes.length} {t.postTruck.summary.selected}
+                      </span>
                     </div>
                     {formData.pricing?.withoutVat && (
                       <div className="flex justify-between">
                         <span className="text-blue-700">{t.postTruck.summary.rate}</span>
-                        <span className="font-medium">${formData.pricing.withoutVat}</span>
+                        <span className="font-medium">
+                          ${formData.pricing.withoutVat}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -891,7 +1093,10 @@ const PostTruck: React.FC = () => {
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
                   >
                     {t.postTruck.navigation.continue}
-                    <ArrowLeft size={16} className="rotate-180" />
+                    <ArrowLeft
+                      size={16}
+                      className="rotate-180"
+                    />
                   </Button>
                 ) : (
                   <Button

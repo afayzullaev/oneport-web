@@ -106,7 +106,9 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   };
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div
+className={`relative ${className}`}
+ref={dropdownRef}>
       {label && (
         <label className="block text-xs font-medium text-gray-700 mb-1">
           {label}

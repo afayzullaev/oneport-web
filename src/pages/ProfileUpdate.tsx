@@ -135,7 +135,9 @@ const ProfileUpdate: React.FC = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="space-y-4">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="h-16 bg-gray-200 rounded"></div>
+                  <div
+key={i}
+className="h-16 bg-gray-200 rounded"></div>
                 ))}
               </div>
             </div>
@@ -152,7 +154,9 @@ const ProfileUpdate: React.FC = () => {
           <div className="text-red-400 text-6xl mb-4">❌</div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Ошибка загрузки</h2>
           <p className="text-gray-600 mb-4">Не удалось загрузить профиль</p>
-          <Button onClick={() => navigate('/profile')} variant="outline">
+          <Button
+onClick={() => navigate('/profile')}
+variant="outline">
             Вернуться к профилю
           </Button>
         </div>
@@ -329,7 +333,9 @@ const ProfileUpdate: React.FC = () => {
                       Товары/продукция
                     </label>
                     {formData.goods.map((good, index) => (
-                      <div key={index} className="flex items-center space-x-2 mb-2">
+                      <div
+key={index}
+className="flex items-center space-x-2 mb-2">
                         <input
                           type="text"
                           value={good}
@@ -416,7 +422,9 @@ const ProfileUpdate: React.FC = () => {
                     Номера телефонов
                   </label>
                   {formData.phoneNumbers.map((phone, index) => (
-                    <div key={index} className="flex items-center space-x-2 mb-2">
+                    <div
+key={index}
+className="flex items-center space-x-2 mb-2">
                       <input
                         type="tel"
                         value={phone}
@@ -455,7 +463,9 @@ const ProfileUpdate: React.FC = () => {
                     Email адреса
                   </label>
                   {formData.emails.map((email, index) => (
-                    <div key={index} className="flex items-center space-x-2 mb-2">
+                    <div
+key={index}
+className="flex items-center space-x-2 mb-2">
                       <input
                         type="email"
                         value={email}

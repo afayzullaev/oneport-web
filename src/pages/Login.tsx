@@ -25,13 +25,40 @@ export default function Login() {
   const [verifyOtp, { isLoading: verifyingOtp, error: verifyError }] =
     useVerifyOtpMutation();
 
+  // Format phone number as XX XXX-XX-XX
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, "");
+    
+    // Limit to 9 digits (without +998)
+    const limitedDigits = digits.substring(0, 9);
+    
+    // Format as XX XXX-XX-XX
+    if (limitedDigits.length <= 2) {
+      return limitedDigits;
+    } else if (limitedDigits.length <= 5) {
+      return `${limitedDigits.substring(0, 2)} ${limitedDigits.substring(2)}`;
+    } else if (limitedDigits.length <= 7) {
+      return `${limitedDigits.substring(0, 2)} ${limitedDigits.substring(2, 5)}-${limitedDigits.substring(5)}`;
+    } else {
+      return `${limitedDigits.substring(0, 2)} ${limitedDigits.substring(2, 5)}-${limitedDigits.substring(5, 7)}-${limitedDigits.substring(7)}`;
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setPhone(formatted);
+  };
+
   const handleSendOtp = async () => {
-    const result = await sendOtp({ phone });
+    const fullPhone = `+998${phone.replace(/\D/g, "")}`; // Add +998 prefix and remove non-digits
+    const result = await sendOtp({ phone: fullPhone });
     if ("data" in result) setStep("otp");
   };
 
   const handleVerifyOtp = async () => {
-    const result = await verifyOtp({ phone, otp });
+    const fullPhone = `+998${phone.replace(/\D/g, "")}`; // Add +998 prefix and remove non-digits
+    const result = await verifyOtp({ phone: fullPhone, otp });
     if ("data" in result) {
       dispatch(setToken(result.data?.token || ""));
       navigate("/");
@@ -74,7 +101,10 @@ export default function Login() {
             Добро пожаловать в 1Port
           </p>
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-            <Truck size={22} className="text-white" strokeWidth={2.5} />
+            <Truck
+size={22}
+className="text-white"
+strokeWidth={2.5} />
           </span>
         </div>
 
@@ -100,9 +130,9 @@ export default function Login() {
                     </label>
                     <input
                       type="tel"
-                      placeholder="+998 90 123 45 67"
+                      placeholder="90 123-45-67"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={handlePhoneChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
                       disabled={sendingOtp}
                     />
@@ -138,7 +168,9 @@ export default function Login() {
                 <div className="text-center mb-6">
                   <div className="flex justify-center mb-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                      <Shield size={24} className="text-green-600" />
+                      <Shield
+size={24}
+className="text-green-600" />
                     </div>
                   </div>
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -147,7 +179,7 @@ export default function Login() {
                   <p className="text-gray-600 text-sm">
                     Код отправлен на номер
                     <br />
-                    <span className="font-medium text-gray-900">{phone}</span>
+                    <span className="font-medium text-gray-900">+998 {phone}</span>
                   </p>
                 </div>
 

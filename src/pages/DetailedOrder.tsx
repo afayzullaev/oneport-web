@@ -27,7 +27,10 @@ const DetailedOrder: React.FC = () => {
               <div className="h-6 bg-gray-200 rounded w-1/2"></div>
               <div className="space-y-2">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="h-4 bg-gray-200 rounded"></div>
+                  <div
+                    key={i}
+                    className="h-4 bg-gray-200 rounded"
+                  ></div>
                 ))}
               </div>
             </div>
@@ -43,9 +46,7 @@ const DetailedOrder: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-sm p-8 text-center">
             <div className="text-gray-400 text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Заказ не найден
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Заказ не найден</h2>
             <p className="text-gray-600 mb-6">
               Заказ с указанным ID не существует или был удален
             </p>
@@ -79,38 +80,52 @@ const DetailedOrder: React.FC = () => {
     if (loadPackage?.name) {
       return getLocalizedText(loadPackage.name);
     }
-    return typeof order.loadPackage === "string"
-      ? order.loadPackage
-      : "Стандартная";
+    return typeof order.loadPackage === "string" ? order.loadPackage : "Стандартная";
   };
 
   const formatDimensions = () => {
-    if (!order.dimensions || typeof order.dimensions !== "object")
-      return "Не указаны";
+    if (!order.dimensions || typeof order.dimensions !== "object") return "Не указаны";
     const { length, width, height } = order.dimensions;
     if (!length || !width || !height) return "Не указаны";
     return `${length} × ${width} × ${height} м`;
   };
 
   const getStatusInfo = () => {
-    if (!order.loadStatus?.state) return { text: "Не указан", color: "gray" };
+    if (!order.loadStatus?.state)
+      return { text: "Не указан", color: "gray", details: "" };
+
+    let details = "";
+    if (order.loadStatus.interval) {
+      const intervalMap = {
+        every_day: "каждый день",
+        in_working_days: "в рабочие дни",
+        every_month: "каждый месяц",
+        twice_a_week: "два раза в неделю",
+        every_week: "каждую неделю",
+      };
+      details = intervalMap[order.loadStatus.interval] || order.loadStatus.interval;
+    }
 
     switch (order.loadStatus.state) {
       case "ready_from":
+        const readyFromDate = order.loadStatus.readyFrom
+          ? new Date(order.loadStatus.readyFrom).toLocaleDateString()
+          : "";
         return {
-          text: `Готов с ${
-            order.loadStatus.readyFrom
-              ? new Date(order.loadStatus.readyFrom).toLocaleDateString()
-              : ""
-          }`,
+          text: `Готов с ${readyFromDate}`,
           color: "green",
+          details: details ? `Периодичность: ${details}` : "",
         };
       case "always":
-        return { text: "Всегда готов", color: "green" };
+        return {
+          text: "Всегда готов",
+          color: "green",
+          details: details ? `Периодичность: ${details}` : "",
+        };
       case "not_ready":
-        return { text: "Не готов", color: "red" };
+        return { text: "Не готов", color: "red", details: "" };
       default:
-        return { text: order.loadStatus.state, color: "yellow" };
+        return { text: order.loadStatus.state, color: "yellow", details: "" };
     }
   };
 
@@ -120,8 +135,7 @@ const DetailedOrder: React.FC = () => {
     const pricingTypeText = order.pricing.pricingType
       ? typeof order.pricing.pricingType === "string"
         ? order.pricing.pricingType
-        : typeof order.pricing.pricingType === "object" &&
-          order.pricing.pricingType.name
+        : typeof order.pricing.pricingType === "object" && order.pricing.pricingType.name
         ? getLocalizedText(order.pricing.pricingType.name)
         : order.pricing.pricingType._id || "Pricing Type"
       : "сум";
@@ -176,34 +190,6 @@ const DetailedOrder: React.FC = () => {
               </h1>
             </div>
           </div>
-
-          {/* Статус заказа */}
-          <div className="flex items-center space-x-3">
-            <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                statusInfo.color === "green"
-                  ? "bg-green-100 text-green-800"
-                  : statusInfo.color === "red"
-                  ? "bg-red-100 text-red-800"
-                  : statusInfo.color === "yellow"
-                  ? "bg-yellow-100 text-yellow-800"
-                  : "bg-gray-100 text-gray-800"
-              }`}
-            >
-              {statusInfo.text}
-            </span>
-
-            {/* Тип предложения */}
-            <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                order.bid === "yes"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-blue-100 text-blue-800"
-              }`}
-            >
-              {order.bid === "yes" ? "Предложение" : "Запрос"}
-            </span>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -218,17 +204,13 @@ const DetailedOrder: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Вес
-                    </label>
+                    <label className="text-sm font-medium text-gray-500">Вес</label>
                     <p className="text-lg font-medium text-gray-900">
                       {formatWeight(order.weight, order.weightUnit)}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Размеры
-                    </label>
+                    <label className="text-sm font-medium text-gray-500">Размеры</label>
                     <p className="text-lg font-medium text-gray-900">
                       {formatDimensions()}
                     </p>
@@ -236,22 +218,56 @@ const DetailedOrder: React.FC = () => {
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Тип груза
-                    </label>
+                    <label className="text-sm font-medium text-gray-500">Тип груза</label>
                     <p className="text-lg font-medium text-gray-900">
                       {getLoadTypeName()}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Упаковка
-                    </label>
+                    <label className="text-sm font-medium text-gray-500">Упаковка</label>
                     <p className="text-lg font-medium text-gray-900">
                       {getLoadPackageName()}
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Статус готовности груза */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="mr-2">📅</span>
+                Статус готовности
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Состояние</label>
+                  <div className="mt-1">
+                    <span
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        statusInfo.color === "green"
+                          ? "bg-green-100 text-green-800"
+                          : statusInfo.color === "red"
+                          ? "bg-red-100 text-red-800"
+                          : statusInfo.color === "yellow"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {statusInfo.text}
+                    </span>
+                  </div>
+                </div>
+                {statusInfo.details && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">
+                      Дополнительно
+                    </label>
+                    <p className="text-lg font-medium text-gray-900 mt-1">
+                      {statusInfo.details}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -271,12 +287,9 @@ const DetailedOrder: React.FC = () => {
                     <p className="text-lg font-medium text-gray-900">
                       {order.loadAddress?.display_place || "Не указан"}
                     </p>
-                    {order.loadAddress?.country &&
-                      order.loadAddress.country !== "-" && (
-                        <p className="text-sm text-gray-500">
-                          {order.loadAddress.country}
-                        </p>
-                      )}
+                    {order.loadAddress?.country && order.loadAddress.country !== "-" && (
+                      <p className="text-sm text-gray-500">{order.loadAddress.country}</p>
+                    )}
                   </div>
                 </div>
 
@@ -389,9 +402,7 @@ const DetailedOrder: React.FC = () => {
               <div className="space-y-3">
                 {profile?.companyName && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Компания
-                    </label>
+                    <label className="text-sm font-medium text-gray-500">Компания</label>
                     <p className="text-lg font-medium text-gray-900">
                       {profile.companyName}
                     </p>
@@ -417,9 +428,7 @@ const DetailedOrder: React.FC = () => {
 
                 {order.owner && typeof order.owner === "object" && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Телефон
-                    </label>
+                    <label className="text-sm font-medium text-gray-500">Телефон</label>
                     <p className="text-lg font-medium text-gray-900">
                       {!order.owner.phone
                         ? "Доступна только для Премиум пользователей"

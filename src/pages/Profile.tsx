@@ -74,7 +74,9 @@ const Profile: React.FC = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-16 bg-gray-200 rounded"></div>
+                  <div
+key={i}
+className="h-16 bg-gray-200 rounded"></div>
                 ))}
               </div>
             </div>
@@ -278,13 +280,17 @@ const Profile: React.FC = () => {
                 </h3>
                 <div className="space-y-3">
                   {profile?.phoneNumbers.map((phone: string, index: number) => (
-                    <div key={index} className="flex items-center space-x-2">
+                    <div
+key={index}
+className="flex items-center space-x-2">
                       <span className="text-gray-400">📱</span>
                       <span className="text-sm">{phone}</span>
                     </div>
                   ))}
                   {profile?.emails?.map((email: string, index: number) => (
-                    <div key={index} className="flex items-center space-x-2">
+                    <div
+key={index}
+className="flex items-center space-x-2">
                       <span className="text-gray-400">📧</span>
                       <span className="text-sm">{email}</span>
                     </div>

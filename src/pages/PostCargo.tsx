@@ -38,7 +38,12 @@ interface FormData {
   loadStatus: {
     state: "ready_from" | "always" | "not_ready";
     readyFrom?: Date;
-    interval?: "every_day" | "in_working_days" | "every_month" | "twice_a_week" | "every_week";
+    interval?:
+      | "every_day"
+      | "in_working_days"
+      | "every_month"
+      | "twice_a_week"
+      | "every_week";
   };
   loadAddress?: LocationResult;
   unloadAddress?: LocationResult;
@@ -87,8 +92,16 @@ const PostCargo: React.FC = () => {
   const steps = [
     { id: 1, name: t.postCargo?.steps?.cargoDetails || "Cargo Details", icon: Package },
     { id: 2, name: t.postCargo?.steps?.locations || "Locations", icon: MapPin },
-    { id: 3, name: t.postCargo?.steps?.truckRequirements || "Truck Requirements", icon: Truck },
-    { id: 4, name: t.postCargo?.steps?.pricingTimeline || "Pricing & Timeline", icon: DollarSign },
+    {
+      id: 3,
+      name: t.postCargo?.steps?.truckRequirements || "Truck Requirements",
+      icon: Truck,
+    },
+    {
+      id: 4,
+      name: t.postCargo?.steps?.pricingTimeline || "Pricing & Timeline",
+      icon: DollarSign,
+    },
   ];
 
   const intervalOptions = [
@@ -100,13 +113,13 @@ const PostCargo: React.FC = () => {
   ];
 
   const updateFormData = (field: keyof FormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const updateNestedFormData = (field: keyof FormData, subField: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: { ...(prev[field] as any), [subField]: value }
+      [field]: { ...(prev[field] as any), [subField]: value },
     }));
   };
 
@@ -161,18 +174,21 @@ const PostCargo: React.FC = () => {
         loadTypes: formData.loadTypes,
         unloadTypes: formData.unloadTypes,
         gpsMonitoring: formData.gpsMonitoring,
-        pricing: formData.pricing && formData.pricing.pricingType ? {
-          withVat: formData.pricing.withVat,
-          withoutVat: formData.pricing.withoutVat,
-          pricingType: formData.pricing.pricingType,
-          cash: formData.pricing.cash,
-        } : undefined,
+        pricing:
+          formData.pricing && formData.pricing.pricingType
+            ? {
+                withVat: formData.pricing.withVat,
+                withoutVat: formData.pricing.withoutVat,
+                pricingType: formData.pricing.pricingType,
+                cash: formData.pricing.cash,
+              }
+            : undefined,
         paymentWithin: formData.paymentWithin,
       };
 
       await createOrder(orderData).unwrap();
-      navigate("/orders", { 
-        state: { message: t.postCargo.validation.createOrderSuccess }
+      navigate("/orders", {
+        state: { message: t.postCargo.validation.createOrderSuccess },
       });
     } catch (error) {
       console.error("Failed to create order:", error);
@@ -197,13 +213,13 @@ const PostCargo: React.FC = () => {
 
   const nextStep = () => {
     if (isStepValid(currentStep) && currentStep < 4) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
   };
 
@@ -217,7 +233,8 @@ const PostCargo: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900">{t.postCargo.title}</h1>
             <p className="text-gray-600 mt-1">{t.postCargo.subtitle}</p>
           </div>
-        </div>        {/* Progress Steps */}
+        </div>{" "}
+        {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-between max-w-4xl mx-auto">
             {steps.map((step, index) => {
@@ -227,44 +244,51 @@ const PostCargo: React.FC = () => {
               const isValid = isStepValid(step.id);
 
               return (
-                <div key={step.id} className="flex items-center">
-                  <div className={`
-                    flex items-center shrink-0 justify-center w-10 h-10 rounded-full border-2 transition-all
-                    ${isActive 
-                      ? 'bg-blue-600 border-blue-600 text-white' 
-                      : isCompleted 
-                        ? 'bg-green-600 border-green-600 text-white'
-                        : isValid
-                          ? 'bg-blue-100 border-blue-300 text-blue-600'
-                          : 'bg-gray-100 border-gray-300 text-gray-400'
-                    }
-                  `}>
-                    {isCompleted ? (
-                      <Check size={20} />
-                    ) : (
-                      <Icon size={20} />
-                    )}
+                <div
+                  key={step.id}
+                  className="flex items-center"
+                >
+                  <div
+                    className={`
+                      flex items-center shrink-0 justify-center w-10 h-10 rounded-full border-2 transition-all
+                      ${
+                        isActive
+                          ? "bg-blue-600 border-blue-600 text-white"
+                          : isCompleted
+                          ? "bg-green-600 border-green-600 text-white"
+                          : isValid
+                          ? "bg-blue-100 border-blue-300 text-blue-600"
+                          : "bg-gray-100 border-gray-300 text-gray-400"
+                      }
+                    `}
+                  >
+                    {isCompleted ? <Check size={20} /> : <Icon size={20} />}
                   </div>
                   <div className="ml-3 hidden sm:block">
-                    <p className={`text-sm font-medium ${
-                      isActive ? 'text-blue-600' : 
-                      isCompleted ? 'text-green-600' : 
-                      'text-gray-500'
-                    }`}>
+                    <p
+                      className={`text-sm font-medium ${
+                        isActive
+                          ? "text-blue-600"
+                          : isCompleted
+                          ? "text-green-600"
+                          : "text-gray-500"
+                      }`}
+                    >
                       {step.name}
                     </p>
                   </div>
                   {index < steps.length - 1 && (
-                    <div className={`w-28 h-0.5 mx-4 ${
-                      isCompleted ? 'bg-green-300' : 'bg-gray-200'
-                    }`} />
+                    <div
+                      className={`w-28 h-0.5 mx-4 ${
+                        isCompleted ? "bg-green-300" : "bg-gray-200"
+                      }`}
+                    />
                   )}
                 </div>
               );
             })}
           </div>
         </div>
-
         {/* Main Form */}
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-xl shadow-lg p-8">
@@ -272,8 +296,13 @@ const PostCargo: React.FC = () => {
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <Package className="text-blue-600" size={24} />
-                  <h2 className="text-2xl font-semibold">{t.postCargo.cargoDetails.title}</h2>
+                  <Package
+                    className="text-blue-600"
+                    size={24}
+                  />
+                  <h2 className="text-2xl font-semibold">
+                    {t.postCargo.cargoDetails.title}
+                  </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -298,12 +327,19 @@ const PostCargo: React.FC = () => {
                     </label>
                     <select
                       value={formData.loadType || ""}
-                      onChange={(e) => updateFormData("loadType", e.target.value || undefined)}
+                      onChange={(e) =>
+                        updateFormData("loadType", e.target.value || undefined)
+                      }
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="">{t.postCargo.cargoDetails.loadTypePlaceholder}</option>
+                      <option value="">
+                        {t.postCargo.cargoDetails.loadTypePlaceholder}
+                      </option>
                       {loadTypes.map((type) => (
-                        <option key={type._id} value={type._id}>
+                        <option
+                          key={type._id}
+                          value={type._id}
+                        >
                           {getLocalizedText(type.name)}
                         </option>
                       ))}
@@ -317,12 +353,19 @@ const PostCargo: React.FC = () => {
                     </label>
                     <select
                       value={formData.loadPackage || ""}
-                      onChange={(e) => updateFormData("loadPackage", e.target.value || undefined)}
+                      onChange={(e) =>
+                        updateFormData("loadPackage", e.target.value || undefined)
+                      }
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="">{t.postCargo.cargoDetails.packageTypePlaceholder}</option>
+                      <option value="">
+                        {t.postCargo.cargoDetails.packageTypePlaceholder}
+                      </option>
                       {loadPackages.map((pkg) => (
-                        <option key={pkg._id} value={pkg._id}>
+                        <option
+                          key={pkg._id}
+                          value={pkg._id}
+                        >
                           {getLocalizedText(pkg.name)}
                         </option>
                       ))}
@@ -362,7 +405,12 @@ const PostCargo: React.FC = () => {
                     <input
                       type="number"
                       value={formData.volume || ""}
-                      onChange={(e) => updateFormData("volume", e.target.value ? Number(e.target.value) : undefined)}
+                      onChange={(e) =>
+                        updateFormData(
+                          "volume",
+                          e.target.value ? Number(e.target.value) : undefined
+                        )
+                      }
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder={t.postCargo.cargoDetails.volumePlaceholder}
                       min="0"
@@ -380,7 +428,13 @@ const PostCargo: React.FC = () => {
                         <input
                           type="number"
                           value={formData.dimensions.length}
-                          onChange={(e) => updateNestedFormData("dimensions", "length", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "dimensions",
+                              "length",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder={t.postCargo.cargoDetails.dimensionsLength}
                           min="0"
@@ -391,7 +445,13 @@ const PostCargo: React.FC = () => {
                         <input
                           type="number"
                           value={formData.dimensions.width}
-                          onChange={(e) => updateNestedFormData("dimensions", "width", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "dimensions",
+                              "width",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder={t.postCargo.cargoDetails.dimensionsWidth}
                           min="0"
@@ -402,7 +462,13 @@ const PostCargo: React.FC = () => {
                         <input
                           type="number"
                           value={formData.dimensions.height}
-                          onChange={(e) => updateNestedFormData("dimensions", "height", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "dimensions",
+                              "height",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder={t.postCargo.cargoDetails.dimensionsHeight}
                           min="0"
@@ -412,34 +478,6 @@ const PostCargo: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Bidding */}
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t.postCargo.cargoDetails.pricingMethod}
-                    </label>
-                    <div className="flex gap-4">
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          value="ask"
-                          checked={formData.bid === "ask"}
-                          onChange={(e) => updateFormData("bid", e.target.value)}
-                          className="mr-2"
-                        />
-                        {t.postCargo.cargoDetails.askForQuote}
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          value="yes"
-                          checked={formData.bid === "yes"}
-                          onChange={(e) => updateFormData("bid", e.target.value)}
-                          className="mr-2"
-                        />
-                        {t.postCargo.cargoDetails.acceptBids}
-                      </label>
-                    </div>
-                  </div>
                 </div>
               </div>
             )}
@@ -448,8 +486,13 @@ const PostCargo: React.FC = () => {
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <MapPin className="text-blue-600" size={24} />
-                  <h2 className="text-2xl font-semibold">{t.postCargo.locations.title}</h2>
+                  <MapPin
+                    className="text-blue-600"
+                    size={24}
+                  />
+                  <h2 className="text-2xl font-semibold">
+                    {t.postCargo.locations.title}
+                  </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -499,22 +542,31 @@ const PostCargo: React.FC = () => {
                 {/* Load Status */}
                 <div className="mt-8 space-y-4">
                   <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
-                    <Calendar className="text-blue-600" size={20} />
+                    <Calendar
+                      className="text-blue-600"
+                      size={20}
+                    />
                     {t.postCargo.locations.cargoAvailability}
                   </h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                       <input
                         type="radio"
                         value="always"
                         checked={formData.loadStatus.state === "always"}
-                        onChange={(e) => updateNestedFormData("loadStatus", "state", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedFormData("loadStatus", "state", e.target.value)
+                        }
                         className="mr-3"
                       />
                       <div>
-                        <p className="font-medium">{t.postCargo.locations.alwaysAvailable}</p>
-                        <p className="text-sm text-gray-500">{t.postCargo.locations.alwaysAvailableDesc}</p>
+                        <p className="font-medium">
+                          {t.postCargo.locations.alwaysAvailable}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {t.postCargo.locations.alwaysAvailableDesc}
+                        </p>
                       </div>
                     </label>
 
@@ -523,12 +575,18 @@ const PostCargo: React.FC = () => {
                         type="radio"
                         value="ready_from"
                         checked={formData.loadStatus.state === "ready_from"}
-                        onChange={(e) => updateNestedFormData("loadStatus", "state", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedFormData("loadStatus", "state", e.target.value)
+                        }
                         className="mr-3"
                       />
                       <div>
-                        <p className="font-medium">{t.postCargo.locations.readyFromDate}</p>
-                        <p className="text-sm text-gray-500">{t.postCargo.locations.readyFromDateDesc}</p>
+                        <p className="font-medium">
+                          {t.postCargo.locations.readyFromDate}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {t.postCargo.locations.readyFromDateDesc}
+                        </p>
                       </div>
                     </label>
 
@@ -537,12 +595,16 @@ const PostCargo: React.FC = () => {
                         type="radio"
                         value="not_ready"
                         checked={formData.loadStatus.state === "not_ready"}
-                        onChange={(e) => updateNestedFormData("loadStatus", "state", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedFormData("loadStatus", "state", e.target.value)
+                        }
                         className="mr-3"
                       />
                       <div>
                         <p className="font-medium">{t.postCargo.locations.notReady}</p>
-                        <p className="text-sm text-gray-500">{t.postCargo.locations.notReadyDesc}</p>
+                        <p className="text-sm text-gray-500">
+                          {t.postCargo.locations.notReadyDesc}
+                        </p>
                       </div>
                     </label>
                   </div>
@@ -555,8 +617,20 @@ const PostCargo: React.FC = () => {
                         </label>
                         <input
                           type="date"
-                          value={formData.loadStatus.readyFrom ? new Date(formData.loadStatus.readyFrom).toISOString().split('T')[0] : ""}
-                          onChange={(e) => updateNestedFormData("loadStatus", "readyFrom", new Date(e.target.value))}
+                          value={
+                            formData.loadStatus.readyFrom
+                              ? new Date(formData.loadStatus.readyFrom)
+                                  .toISOString()
+                                  .split("T")[0]
+                              : ""
+                          }
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "loadStatus",
+                              "readyFrom",
+                              new Date(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                       </div>
@@ -566,12 +640,23 @@ const PostCargo: React.FC = () => {
                         </label>
                         <select
                           value={formData.loadStatus.interval || ""}
-                          onChange={(e) => updateNestedFormData("loadStatus", "interval", e.target.value || undefined)}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "loadStatus",
+                              "interval",
+                              e.target.value || undefined
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
-                          <option value="">{t.postCargo.locations.frequencyPlaceholder}</option>
+                          <option value="">
+                            {t.postCargo.locations.frequencyPlaceholder}
+                          </option>
                           {intervalOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
+                            <option
+                              key={option.value}
+                              value={option.value}
+                            >
                               {option.label}
                             </option>
                           ))}
@@ -587,155 +672,333 @@ const PostCargo: React.FC = () => {
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <Truck className="text-blue-600" size={24} />
-                  <h2 className="text-2xl font-semibold">{t.postCargo.truckRequirements.title}</h2>
+                  <Truck
+                    className="text-blue-600"
+                    size={24}
+                  />
+                  <h2 className="text-2xl font-semibold">
+                    {t.postCargo.truckRequirements.title}
+                  </h2>
                 </div>
 
                 {/* Truck Options */}
-                <div>
-                  <label className="block text-lg font-medium text-gray-900 mb-4">
-                    {t.postCargo.truckRequirements.requiredFeatures}
-                  </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {truckOptions.map((option) => {
-                      if (!option._id) return null;
-                      return (
-                      <label
-                        key={option._id}
-                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.truckOptions.includes(option._id)
-                            ? "border-blue-500 bg-blue-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.truckOptions.includes(option._id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              updateFormData("truckOptions", [...formData.truckOptions, option._id!]);
-                            } else {
-                              updateFormData("truckOptions", formData.truckOptions.filter(id => id !== option._id));
-                            }
-                          }}
-                          className="sr-only"
-                        />
-                        <div className={`w-5 h-5 shrink-0 border-2 rounded mr-3 flex items-center justify-center ${
-                          formData.truckOptions.includes(option._id)
-                            ? "border-blue-500 bg-blue-500"
-                            : "border-gray-300"
-                        }`}>
-                          {formData.truckOptions.includes(option._id) && (
-                            <Check className="text-white" size={14} />
-                          )}
-                        </div>
-                        <span className="font-medium">{getLocalizedText(option.name)}</span>
-                      </label>
-                      );
-                    })}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-gray-900">* Кузов</h3>
+                  </div>
+                  <div className="border border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto">
+                    <div className="space-y-3">
+                      {(() => {
+                        // Group truck options by parent-child relationship
+                        const parentOptions = truckOptions.filter((opt) => !opt.parentId);
+                        const childOptions = truckOptions.filter((opt) => opt.parentId);
+
+                        // Group children by parent ID
+                        const childrenByParent = childOptions.reduce((acc, child) => {
+                          const parentId = child.parentId?._id;
+                          if (parentId) {
+                            if (!acc[parentId]) acc[parentId] = [];
+                            acc[parentId].push(child);
+                          }
+                          return acc;
+                        }, {} as Record<string, typeof childOptions>);
+
+                        return parentOptions.map((parent) => {
+                          if (!parent._id) return null;
+
+                          const children = childrenByParent[parent._id] || [];
+                          const isParentSelected = formData.truckOptions.includes(
+                            parent._id
+                          );
+                          const selectedChildrenCount = children.filter(
+                            (child) =>
+                              child._id && formData.truckOptions.includes(child._id)
+                          ).length;
+                          const isIndeterminate =
+                            selectedChildrenCount > 0 &&
+                            selectedChildrenCount < children.length;
+
+                          return (
+                            <div
+                              key={parent._id}
+                              className="space-y-2"
+                            >
+                              {/* Parent Option */}
+                              <label className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded font-medium">
+                                <input
+                                  type="checkbox"
+                                  checked={
+                                    (children.length === 0 && isParentSelected) ||
+                                    (children.length > 0 && selectedChildrenCount === children.length)
+                                  }
+                                  ref={(el) => {
+                                    if (el) el.indeterminate = isIndeterminate;
+                                  }}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      // Select all children (and parent if it has no children)
+                                      const newSelections = [
+                                        ...formData.truckOptions.filter(
+                                          (id) =>
+                                            id !== parent._id &&
+                                            !children.some((child) => child._id === id)
+                                        ),
+                                        ...(children.length === 0 ? [parent._id] : []),
+                                        ...children
+                                          .map((child) => child._id!)
+                                          .filter((id) => id),
+                                      ];
+                                      updateFormData("truckOptions", newSelections);
+                                    } else {
+                                      // Deselect all children (and parent if it has no children)
+                                      const newSelections = formData.truckOptions.filter(
+                                        (id) =>
+                                          id !== parent._id &&
+                                          !children.some((child) => child._id === id)
+                                      );
+                                      updateFormData("truckOptions", newSelections);
+                                    }
+                                  }}
+                                  className="mr-3"
+                                />
+                                <span className="text-gray-900">
+                                  {getLocalizedText(parent.name)}
+                                </span>
+                                {children.length > 0 && (
+                                  <span className="ml-2 text-xs text-gray-500">
+                                    ({selectedChildrenCount}/{children.length})
+                                  </span>
+                                )}
+                              </label>
+
+                              {/* Child Options */}
+                              {children.length > 0 && (
+                                <div className="ml-6 space-y-1 border-l-2 border-gray-200 pl-4">
+                                  {children.map((child) => {
+                                    if (!child._id) return null;
+                                    return (
+                                      <label
+                                        key={child._id}
+                                        className="flex items-center cursor-pointer hover:bg-gray-50 p-1 rounded text-sm"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          checked={formData.truckOptions.includes(
+                                            child._id
+                                          )}
+                                          onChange={(e) => {
+                                            if (e.target.checked) {
+                                              updateFormData("truckOptions", [
+                                                ...formData.truckOptions,
+                                                child._id!,
+                                              ]);
+                                            } else {
+                                              updateFormData(
+                                                "truckOptions",
+                                                formData.truckOptions.filter(
+                                                  (id) => id !== child._id
+                                                )
+                                              );
+                                            }
+                                          }}
+                                          className="mr-2"
+                                        />
+                                        <span className="text-gray-700">
+                                          {getLocalizedText(child.name)}
+                                        </span>
+                                      </label>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        });
+                      })()}
+
+                      {/* Standalone options (no parent) that aren't parents themselves */}
+                      {truckOptions
+                        .filter(
+                          (opt) =>
+                            !opt.parentId &&
+                            !truckOptions.some(
+                              (child) =>
+                                (typeof child.parentId === "string"
+                                  ? child.parentId
+                                  : child.parentId?._id) === opt._id
+                            )
+                        )
+                        .map((option) => {
+                          if (!option._id) return null;
+                          return (
+                            <label
+                              key={option._id}
+                              className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={formData.truckOptions.includes(option._id)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    updateFormData("truckOptions", [
+                                      ...formData.truckOptions,
+                                      option._id!,
+                                    ]);
+                                  } else {
+                                    updateFormData(
+                                      "truckOptions",
+                                      formData.truckOptions.filter(
+                                        (id) => id !== option._id
+                                      )
+                                    );
+                                  }
+                                }}
+                                className="mr-3"
+                              />
+                              <span className="text-gray-800">
+                                {getLocalizedText(option.name)}
+                              </span>
+                            </label>
+                          );
+                        })}
+                    </div>
                   </div>
                 </div>
 
                 {/* Load Types */}
-                <div>
-                  <label className="block text-lg font-medium text-gray-900 mb-4">
-                    {t.postCargo.truckRequirements.loadingMethods}
-                  </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {truckLoadTypes.map((type) => {
-                      if (!type._id) return null;
-                      return (
-                      <label
-                        key={type._id}
-                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.loadTypes.includes(type._id)
-                            ? "border-green-500 bg-green-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.loadTypes.includes(type._id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              updateFormData("loadTypes", [...formData.loadTypes, type._id!]);
-                            } else {
-                              updateFormData("loadTypes", formData.loadTypes.filter(id => id !== type._id));
-                            }
-                          }}
-                          className="sr-only"
-                        />
-                        <div className={`w-5 h-5 shrink-0 border-2 rounded mr-3 flex items-center justify-center ${
-                          formData.loadTypes.includes(type._id)
-                            ? "border-green-500 bg-green-500"
-                            : "border-gray-300"
-                        }`}>
-                          {formData.loadTypes.includes(type._id) && (
-                            <Check className="text-white" size={14} />
-                          )}
-                        </div>
-                        <span className="font-medium">{getLocalizedText(type.name)}</span>
-                      </label>
-                      );
-                    })}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-gray-900">Загрузка</h3>
+                    <label className="flex items-center text-sm text-gray-600">
+                      <input
+                        type="checkbox"
+                        checked={formData.loadTypes.length === truckLoadTypes.length}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            updateFormData(
+                              "loadTypes",
+                              truckLoadTypes.map((type) => type._id!).filter((id) => id)
+                            );
+                          } else {
+                            updateFormData("loadTypes", []);
+                          }
+                        }}
+                        className="mr-2"
+                      />
+                      учитывать все выбранные
+                    </label>
+                  </div>
+                  <div className="border border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto">
+                    <div className="space-y-3">
+                      {truckLoadTypes.map((type) => {
+                        if (!type._id) return null;
+                        return (
+                          <label
+                            key={type._id}
+                            className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={formData.loadTypes.includes(type._id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  updateFormData("loadTypes", [
+                                    ...formData.loadTypes,
+                                    type._id!,
+                                  ]);
+                                } else {
+                                  updateFormData(
+                                    "loadTypes",
+                                    formData.loadTypes.filter((id) => id !== type._id)
+                                  );
+                                }
+                              }}
+                              className="mr-3"
+                            />
+                            <span className="text-gray-800">
+                              {getLocalizedText(type.name)}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
                 {/* Unload Types */}
-                <div>
-                  <label className="block text-lg font-medium text-gray-900 mb-4">
-                    {t.postCargo.truckRequirements.unloadingMethods}
-                  </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {truckLoadTypes.map((type) => {
-                      if (!type._id) return null;
-                      return (
-                      <label
-                        key={type._id}
-                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.unloadTypes.includes(type._id)
-                            ? "border-red-500 bg-red-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.unloadTypes.includes(type._id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              updateFormData("unloadTypes", [...formData.unloadTypes, type._id!]);
-                            } else {
-                              updateFormData("unloadTypes", formData.unloadTypes.filter(id => id !== type._id));
-                            }
-                          }}
-                          className="sr-only"
-                        />
-                        <div className={`w-5 h-5 shrink-0 border-2 rounded mr-3 flex items-center justify-center ${
-                          formData.unloadTypes.includes(type._id)
-                            ? "border-red-500 bg-red-500"
-                            : "border-gray-300"
-                        }`}>
-                          {formData.unloadTypes.includes(type._id) && (
-                            <Check className="text-white" size={14} />
-                          )}
-                        </div>
-                        <span className="font-medium">{getLocalizedText(type.name)}</span>
-                      </label>
-                      );
-                    })}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-gray-900">Выгрузка</h3>
+                    <label className="flex items-center text-sm text-gray-600">
+                      <input
+                        type="checkbox"
+                        checked={formData.unloadTypes.length === truckLoadTypes.length}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            updateFormData(
+                              "unloadTypes",
+                              truckLoadTypes.map((type) => type._id!).filter((id) => id)
+                            );
+                          } else {
+                            updateFormData("unloadTypes", []);
+                          }
+                        }}
+                        className="mr-2"
+                      />
+                      учитывать все выбранные
+                    </label>
+                  </div>
+                  <div className="border border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto">
+                    <div className="space-y-3">
+                      {truckLoadTypes.map((type) => {
+                        if (!type._id) return null;
+                        return (
+                          <label
+                            key={type._id}
+                            className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={formData.unloadTypes.includes(type._id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  updateFormData("unloadTypes", [
+                                    ...formData.unloadTypes,
+                                    type._id!,
+                                  ]);
+                                } else {
+                                  updateFormData(
+                                    "unloadTypes",
+                                    formData.unloadTypes.filter((id) => id !== type._id)
+                                  );
+                                }
+                              }}
+                              className="mr-3"
+                            />
+                            <span className="text-gray-800">
+                              {getLocalizedText(type.name)}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
                 {/* GPS Monitoring */}
                 <div className="p-6 bg-gray-50 rounded-lg">
                   <div className="flex items-center gap-3 mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">{t.postCargo.truckRequirements.gpsMonitoring}</h3>
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {t.postCargo.truckRequirements.gpsMonitoring}
+                    </h3>
                   </div>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={formData.gpsMonitoring.enabled}
-                      onChange={(e) => updateNestedFormData("gpsMonitoring", "enabled", e.target.checked)}
+                      onChange={(e) =>
+                        updateNestedFormData("gpsMonitoring", "enabled", e.target.checked)
+                      }
                       className="mr-3"
                     />
                     <span>{t.postCargo.truckRequirements.requireGps}</span>
@@ -745,7 +1008,13 @@ const PostCargo: React.FC = () => {
                       <input
                         type="text"
                         value={formData.gpsMonitoring.provider || ""}
-                        onChange={(e) => updateNestedFormData("gpsMonitoring", "provider", e.target.value)}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "gpsMonitoring",
+                            "provider",
+                            e.target.value
+                          )
+                        }
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={t.postCargo.truckRequirements.gpsProviderPlaceholder}
                       />
@@ -759,8 +1028,40 @@ const PostCargo: React.FC = () => {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <DollarSign className="text-blue-600" size={24} />
+                  <DollarSign
+                    className="text-blue-600"
+                    size={24}
+                  />
                   <h2 className="text-2xl font-semibold">{t.postCargo.pricing.title}</h2>
+                </div>
+
+                {/* Bidding Method */}
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t.postCargo.cargoDetails.pricingMethod}
+                  </label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        value="ask"
+                        checked={formData.bid === "ask"}
+                        onChange={(e) => updateFormData("bid", e.target.value)}
+                        className="mr-2"
+                      />
+                      {t.postCargo.cargoDetails.askForQuote}
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        value="yes"
+                        checked={formData.bid === "yes"}
+                        onChange={(e) => updateFormData("bid", e.target.value)}
+                        className="mr-2"
+                      />
+                      {t.postCargo.cargoDetails.acceptBids}
+                    </label>
+                  </div>
                 </div>
 
                 {formData.bid === "yes" && (
@@ -774,7 +1075,13 @@ const PostCargo: React.FC = () => {
                         <input
                           type="number"
                           value={formData.pricing?.withoutVat || ""}
-                          onChange={(e) => updateNestedFormData("pricing", "withoutVat", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "pricing",
+                              "withoutVat",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder="0"
                           min="0"
@@ -787,7 +1094,13 @@ const PostCargo: React.FC = () => {
                         <input
                           type="number"
                           value={formData.pricing?.withVat || ""}
-                          onChange={(e) => updateNestedFormData("pricing", "withVat", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "pricing",
+                              "withVat",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder="0"
                           min="0"
@@ -800,7 +1113,13 @@ const PostCargo: React.FC = () => {
                         <input
                           type="number"
                           value={formData.pricing?.cash || ""}
-                          onChange={(e) => updateNestedFormData("pricing", "cash", Number(e.target.value))}
+                          onChange={(e) =>
+                            updateNestedFormData(
+                              "pricing",
+                              "cash",
+                              Number(e.target.value)
+                            )
+                          }
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           placeholder="0"
                           min="0"
@@ -815,12 +1134,23 @@ const PostCargo: React.FC = () => {
                       </label>
                       <select
                         value={formData.pricing?.pricingType || ""}
-                        onChange={(e) => updateNestedFormData("pricing", "pricingType", e.target.value || undefined)}
+                        onChange={(e) =>
+                          updateNestedFormData(
+                            "pricing",
+                            "pricingType",
+                            e.target.value || undefined
+                          )
+                        }
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <option value="">{t.postCargo.pricing.pricingMethodPlaceholder}</option>
+                        <option value="">
+                          {t.postCargo.pricing.pricingMethodPlaceholder}
+                        </option>
                         {pricingTypes.map((type) => (
-                          <option key={type._id} value={type._id}>
+                          <option
+                            key={type._id}
+                            value={type._id}
+                          >
                             {getLocalizedText(type.name)}
                           </option>
                         ))}
@@ -836,10 +1166,17 @@ const PostCargo: React.FC = () => {
                   </label>
                   <select
                     value={formData.paymentWithin || ""}
-                    onChange={(e) => updateFormData("paymentWithin", e.target.value ? Number(e.target.value) : undefined)}
+                    onChange={(e) =>
+                      updateFormData(
+                        "paymentWithin",
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">{t.postCargo.pricing.paymentTermsPlaceholder}</option>
+                    <option value="">
+                      {t.postCargo.pricing.paymentTermsPlaceholder}
+                    </option>
                     <option value="0">{t.postCargo.pricing.immediatePayment}</option>
                     <option value="7">7 {t.postCargo.pricing.days}</option>
                     <option value="14">14 {t.postCargo.pricing.days}</option>
@@ -851,7 +1188,9 @@ const PostCargo: React.FC = () => {
 
                 {/* Summary Card */}
                 <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-4">Order Summary</h3>
+                  <h3 className="text-lg font-semibold text-blue-900 mb-4">
+                    Order Summary
+                  </h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-blue-700">Cargo:</span>
@@ -859,22 +1198,29 @@ const PostCargo: React.FC = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-blue-700">Weight:</span>
-                      <span className="font-medium">{formData.weight} {formData.weightUnit}</span>
+                      <span className="font-medium">
+                        {formData.weight} {formData.weightUnit}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-blue-700">Route:</span>
                       <span className="font-medium">
-                        {formData.loadAddress?.display_place} → {formData.unloadAddress?.display_place}
+                        {formData.loadAddress?.display_place} →{" "}
+                        {formData.unloadAddress?.display_place}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-blue-700">Truck Options:</span>
-                      <span className="font-medium">{formData.truckOptions.length} selected</span>
+                      <span className="font-medium">
+                        {formData.truckOptions.length} selected
+                      </span>
                     </div>
                     {formData.pricing?.withoutVat && (
                       <div className="flex justify-between">
                         <span className="text-blue-700">Budget:</span>
-                        <span className="font-medium">${formData.pricing.withoutVat}</span>
+                        <span className="font-medium">
+                          ${formData.pricing.withoutVat}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -902,12 +1248,17 @@ const PostCargo: React.FC = () => {
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
                   >
                     {t.postCargo.navigation.continue}
-                    <ArrowLeft size={16} className="rotate-180" />
+                    <ArrowLeft
+                      size={16}
+                      className="rotate-180"
+                    />
                   </Button>
                 ) : (
                   <Button
                     onClick={handleSubmit}
-                    disabled={isCreating || !isStepValid(1) || !isStepValid(2) || !isStepValid(3)}
+                    disabled={
+                      isCreating || !isStepValid(1) || !isStepValid(2) || !isStepValid(3)
+                    }
                     className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-2"
                   >
                     {isCreating ? (

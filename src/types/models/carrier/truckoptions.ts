@@ -11,7 +11,7 @@ export interface LocalizedString {
 export interface TruckOptions {
   _id?: string;
   name: LocalizedString;
-  parentId?: string; // ObjectId as string
+  parentId?: TruckOptions; // ObjectId as string
   createdAt?: Date;
   updatedAt?: Date;
   __v?: number;

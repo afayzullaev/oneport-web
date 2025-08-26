@@ -1,10 +1,10 @@
 import React from "react";
-import TrucksTable from "@/components/tables/TrucksTable";
+import TruckDataGridTable from "@/components/tables/TruckDataGridTable";
 
 const Trucks: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <TrucksTable />
+      <TruckDataGridTable />
     </div>
   );
 };

@@ -31,8 +31,8 @@ export const useTrucksFilter = () => {
     return cleaned;
   }, [filters]);
 
-  const updateFilters = (newFilters: Partial<TrucksFilterParams>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+  const updateFilters = (newFilters: TrucksFilterParams) => {
+    setFilters(newFilters);
   };
 
   const clearFilters = () => {
