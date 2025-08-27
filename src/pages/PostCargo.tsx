@@ -170,9 +170,33 @@ const PostCargo: React.FC = () => {
           country_code: formData.unloadAddress.address?.country_code || "",
           place_id: formData.unloadAddress.place_id || "",
         },
-        truckOptions: formData.truckOptions,
-        loadTypes: formData.loadTypes,
-        unloadTypes: formData.unloadTypes,
+        truckOptions: truckOptions.filter((opt) =>
+          formData.truckOptions.includes(opt._id!)
+        ),
+        loadTypes: truckLoadTypes
+          .filter((type) => formData.loadTypes.includes(type._id!))
+          .map((type) => ({
+            _id: type._id,
+            name: {
+              en: type.name.en || "",
+              uz: type.name.uz || "",
+              ru: type.name.ru || "",
+              kz: type.name.kz || "",
+              kaa: type.name.kaa || "",
+            },
+          })),
+        unloadTypes: truckLoadTypes
+          .filter((type) => formData.unloadTypes.includes(type._id!))
+          .map((type) => ({
+            _id: type._id,
+            name: {
+              en: type.name.en || "",
+              uz: type.name.uz || "",
+              ru: type.name.ru || "",
+              kz: type.name.kz || "",
+              kaa: type.name.kaa || "",
+            },
+          })),
         gpsMonitoring: formData.gpsMonitoring,
         pricing:
           formData.pricing && formData.pricing.pricingType
@@ -225,8 +249,7 @@ const PostCargo: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
+      <div className="container mx-auto px-4 py-8 pb-24 md:pb-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <div>
@@ -236,7 +259,8 @@ const PostCargo: React.FC = () => {
         </div>{" "}
         {/* Progress Steps */}
         <div className="mb-8">
-          <div className="flex items-center justify-between max-w-4xl mx-auto">
+          {/* Desktop Version - Full Steps */}
+          <div className="hidden md:flex items-center justify-between max-w-4xl mx-auto">
             {steps.map((step, index) => {
               const Icon = step.icon;
               const isActive = currentStep === step.id;
@@ -264,7 +288,7 @@ const PostCargo: React.FC = () => {
                   >
                     {isCompleted ? <Check size={20} /> : <Icon size={20} />}
                   </div>
-                  <div className="ml-3 hidden sm:block">
+                  <div className="ml-3">
                     <p
                       className={`text-sm font-medium ${
                         isActive
@@ -287,6 +311,69 @@ const PostCargo: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+
+          {/* Mobile Version - Single Step Indicator */}
+          <div className="md:hidden flex flex-col items-center space-y-3">
+            {/* Current Step Icon */}
+            <div className="flex items-center justify-center">
+              {(() => {
+                const currentStepData = steps.find((step) => step.id === currentStep);
+                const Icon = currentStepData?.icon || Package;
+                return (
+                  <div className="flex items-center shrink-0 justify-center w-12 h-12 rounded-full border-2 bg-blue-600 border-blue-600 text-white">
+                    <Icon size={24} />
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Step Info */}
+            <div className="text-center">
+              <p className="text-lg font-semibold text-blue-600 mb-1">
+                {steps.find((step) => step.id === currentStep)?.name}
+              </p>
+              <p className="text-sm text-gray-500">
+                Шаг {currentStep} из {steps.length}
+              </p>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="w-full max-w-xs">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-gray-500">Прогресс</span>
+                <span className="text-xs text-blue-600 font-medium">
+                  {Math.round((currentStep / steps.length) * 100)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
+                  style={{ width: `${(currentStep / steps.length) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Step Indicators */}
+            <div className="flex items-center space-x-2">
+              {steps.map((step) => {
+                const isActive = currentStep === step.id;
+                const isCompleted = currentStep > step.id;
+
+                return (
+                  <div
+                    key={step.id}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      isActive
+                        ? "bg-blue-600 scale-125"
+                        : isCompleted
+                        ? "bg-green-500"
+                        : "bg-gray-300"
+                    }`}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
         {/* Main Form */}

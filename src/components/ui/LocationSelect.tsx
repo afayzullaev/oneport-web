@@ -24,14 +24,20 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   const [searchTerm, setSearchTerm] = useState(value);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<LocationResult | null>(null);
+  const [isSelecting, setIsSelecting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [searchLocations, { data: locations = [], isLoading, error }] = useLazySearchLocationsQuery();
 
+  // Only sync external value on initial mount
+  useEffect(() => {
+    setSearchTerm(value);
+  }, []); // Only run on mount
+
   // Handle search with debouncing
   useEffect(() => {
-    if (searchTerm.length >= 2) {
+    if (searchTerm.length >= 2 && !isSelecting) {
       const timeoutId = setTimeout(() => {
         searchLocations(searchTerm);
         setIsOpen(true);
@@ -40,7 +46,7 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
     } else {
       setIsOpen(false);
     }
-  }, [searchTerm, searchLocations]);
+  }, [searchTerm, searchLocations, isSelecting]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -66,6 +72,7 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   };
 
   const handleLocationSelect = (location: LocationResult) => {
+    setIsSelecting(true);
     setSelectedLocation(location);
     const displayText = showCountryOnly 
       ? location.address?.country || location.display_place
@@ -73,14 +80,25 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
     setSearchTerm(displayText);
     setIsOpen(false);
     onSelect(location);
+    
+    // Reset selecting state after a short delay
+    setTimeout(() => {
+      setIsSelecting(false);
+    }, 100);
   };
 
   const handleClear = () => {
+    setIsSelecting(true);
     setSearchTerm('');
     setSelectedLocation(null);
     setIsOpen(false);
     onSelect(null);
     inputRef.current?.focus();
+    
+    // Reset selecting state after a short delay
+    setTimeout(() => {
+      setIsSelecting(false);
+    }, 100);
   };
 
   const formatLocationDisplay = (location: LocationResult): string => {

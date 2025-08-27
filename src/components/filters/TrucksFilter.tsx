@@ -15,10 +15,9 @@ const TrucksFilter: React.FC<TrucksFilterProps> = ({
   currentFilters,
 }) => {
   const { t } = useLocalization();
-  
+
   // Локальное состояние для полей ввода
-  const [localFilters, setLocalFilters] =
-    useState<TrucksFilterParams>(currentFilters);
+  const [localFilters, setLocalFilters] = useState<TrucksFilterParams>(currentFilters);
 
   // Синхронизируем локальное состояние с внешними фильтрами
   useEffect(() => {
@@ -39,14 +38,15 @@ const TrucksFilter: React.FC<TrucksFilterProps> = ({
       });
     };
 
-  const handleLocationSelect = (field: 'fromCountry' | 'toCountry') => (location: LocationResult | null) => {
-    const countryCode = location?.address?.country_code || '';
-    
-    setLocalFilters({
-      ...localFilters,
-      [field]: countryCode || undefined,
-    });
-  };
+  const handleLocationSelect =
+    (field: "fromCountry" | "toCountry") => (location: LocationResult | null) => {
+      const countryCode = location?.address?.country_code || "";
+
+      setLocalFilters({
+        ...localFilters,
+        [field]: countryCode || undefined,
+      });
+    };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -87,8 +87,7 @@ const TrucksFilter: React.FC<TrucksFilterProps> = ({
             <LocationSelect
               label={t.filterTrucks.location.pickupLocation}
               placeholder={t.filterTrucks.location.pickupPlaceholder}
-              value={localFilters.fromCountry || ""}
-              onSelect={handleLocationSelect('fromCountry')}
+              onSelect={handleLocationSelect("fromCountry")}
               showCountryOnly={true}
               className="text-sm"
             />
@@ -98,8 +97,7 @@ const TrucksFilter: React.FC<TrucksFilterProps> = ({
             <LocationSelect
               label={t.filterTrucks.location.deliveryLocation}
               placeholder={t.filterTrucks.location.deliveryPlaceholder}
-              value={localFilters.toCountry || ""}
-              onSelect={handleLocationSelect('toCountry')}
+              onSelect={handleLocationSelect("toCountry")}
               showCountryOnly={true}
               className="text-sm"
             />
@@ -144,9 +142,7 @@ const TrucksFilter: React.FC<TrucksFilterProps> = ({
               placeholder={t.filterTrucks.truckDetails.pricePlaceholder}
               min="0"
               value={
-                localFilters.minPriceWithVat ||
-                localFilters.minPriceWithoutVat ||
-                ""
+                localFilters.minPriceWithVat || localFilters.minPriceWithoutVat || ""
               }
               onChange={(e) => {
                 const value = +e.target.value || undefined;
@@ -170,9 +166,7 @@ const TrucksFilter: React.FC<TrucksFilterProps> = ({
               placeholder="100000"
               min="0"
               value={
-                localFilters.maxPriceWithVat ||
-                localFilters.maxPriceWithoutVat ||
-                ""
+                localFilters.maxPriceWithVat || localFilters.maxPriceWithoutVat || ""
               }
               onChange={(e) => {
                 const value = +e.target.value || undefined;
@@ -200,8 +194,7 @@ const TrucksFilter: React.FC<TrucksFilterProps> = ({
               <div className="flex flex-wrap gap-1">
                 {Object.entries(currentFilters)
                   .filter(
-                    ([, value]) =>
-                      value !== undefined && value !== null && value !== ""
+                    ([, value]) => value !== undefined && value !== null && value !== ""
                   )
                   .map(([key, value]) => (
                     <span

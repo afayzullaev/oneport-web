@@ -11,7 +11,10 @@ export interface Translations {
       from: string;
       to: string;
       status: string;
+      loadType: string;
       actions: string;
+      direction: string;
+      trucktype: string;
     };
     cargoType: string;
     packaging: string;
@@ -435,11 +438,14 @@ export const ruTranslations: Translations = {
     headers: {
       cargo: "Груз",
       characteristics: "Характеристики",
-      price: "Цена",
+      price: "Cтавка",
       from: "Откуда",
       to: "Куда",
+      loadType: "Вид погрузки",
       status: "Статус",
       actions: "Действия",
+      direction: "Направление",
+      trucktype: "Тип Грузовика",
     },
     cargoType: "Тип груза:",
     packaging: "Упаковка:",
@@ -448,8 +454,7 @@ export const ruTranslations: Translations = {
     },
     error: {
       title: "Ошибка загрузки заказов",
-      message:
-        "Не удалось загрузить список заказов. Попробуйте обновить страницу.",
+      message: "Не удалось загрузить список заказов. Попробуйте обновить страницу.",
     },
     empty: {
       title: "Нет заказов",
@@ -517,7 +522,8 @@ export const ruTranslations: Translations = {
       title: "Мои грузовые заказы",
       subtitle: "Заказы, созданные вами • Всего: ",
       emptyTitle: "Вы еще не создали ни одного заказа",
-      emptyMessage: "Начните с размещения своего первого грузового заказа, чтобы найти перевозчиков.",
+      emptyMessage:
+        "Начните с размещения своего первого грузового заказа, чтобы найти перевозчиков.",
       postFirst: "Разместить первый груз",
       yourOrders: "Ваши заказы: ",
       postNew: "Разместить новый груз",
@@ -526,7 +532,8 @@ export const ruTranslations: Translations = {
       title: "Мои грузовики",
       subtitle: "Грузовики, размещенные вами • Всего: ",
       emptyTitle: "Вы еще не разместили ни одного грузовика",
-      emptyMessage: "Начните с размещения своего первого грузовика, чтобы связаться с грузовладельцами.",
+      emptyMessage:
+        "Начните с размещения своего первого грузовика, чтобы связаться с грузовладельцами.",
       postFirst: "Разместить первый грузовик",
       yourTrucks: "Ваши грузовики: ",
       postNew: "Разместить новый грузовик",
@@ -566,8 +573,8 @@ export const ruTranslations: Translations = {
       dimensionsWidth: "Ширина (м)",
       dimensionsHeight: "Высота (м)",
       pricingMethod: "Способ формирования цены *",
-      askForQuote: "Запросить предложение",
-      acceptBids: "Принимать ставки",
+      askForQuote: "Договорная цена",
+      acceptBids: "Фиксированная цена",
     },
     locations: {
       title: "Адреса загрузки и выгрузки",
@@ -692,8 +699,8 @@ export const ruTranslations: Translations = {
     pricing: {
       title: "Цены и условия",
       pricingMethod: "Метод ценообразования",
-      askForQuote: "Запросить предложение",
-      acceptBids: "Принимать предложения",
+      askForQuote: "Договорная цена",
+      acceptBids: "Фиксированная цена",
       rateExcludingVat: "Тариф (без НДС)",
       rateIncludingVat: "Тариф (с НДС)",
       cashRate: "Наличный тариф",
@@ -847,6 +854,9 @@ export const enTranslations: Translations = {
       to: "To",
       status: "Status",
       actions: "Actions",
+      loadType: "Load Type",
+      direction: "Direction",
+      trucktype: "Truck Type",
     },
     cargoType: "Cargo Type:",
     packaging: "Packaging:",
@@ -972,8 +982,8 @@ export const enTranslations: Translations = {
       dimensionsWidth: "Width (m)",
       dimensionsHeight: "Height (m)",
       pricingMethod: "Pricing Method *",
-      askForQuote: "Ask for Quote",
-      acceptBids: "Accept Bids",
+      askForQuote: "Negotiable",
+      acceptBids: "Fixed price",
     },
     locations: {
       title: "Pickup & Delivery Locations",
@@ -1098,8 +1108,8 @@ export const enTranslations: Translations = {
     pricing: {
       title: "Pricing & Terms",
       pricingMethod: "Pricing Method",
-      askForQuote: "Ask for Quote",
-      acceptBids: "Accept Bids",
+      askForQuote: "Negotiable",
+      acceptBids: "Fixed price",
       rateExcludingVat: "Rate (excluding VAT)",
       rateIncludingVat: "Rate (including VAT)",
       cashRate: "Cash Rate",
@@ -1253,6 +1263,9 @@ export const uzTranslations: Translations = {
       to: "Qayerga",
       status: "Holat",
       actions: "Amallar",
+      loadType: "Yuklash turi",
+      direction: "Yo'nalish",
+      trucktype: "Yuk mashinasi turi",
     },
     cargoType: "Yuk turi:",
     packaging: "Qadoqlash:",
@@ -1330,7 +1343,8 @@ export const uzTranslations: Translations = {
       title: "Mening Yuk Buyurtmalarim",
       subtitle: "Siz yaratgan buyurtmalar • Jami: ",
       emptyTitle: "Siz hali buyurtma yaratmagansiz",
-      emptyMessage: "Tashuvchilarni topish uchun birinchi yuk buyurtmangizni joylashtiring.",
+      emptyMessage:
+        "Tashuvchilarni topish uchun birinchi yuk buyurtmangizni joylashtiring.",
       postFirst: "Birinchi Yukingizni Joylang",
       yourOrders: "Sizning buyurtmalaringiz: ",
       postNew: "Yangi Yuk Joylash",
@@ -1379,8 +1393,8 @@ export const uzTranslations: Translations = {
       dimensionsWidth: "Kenglik (m)",
       dimensionsHeight: "Balandlik (m)",
       pricingMethod: "Narxlash usuli *",
-      askForQuote: "Taklif so'rash",
-      acceptBids: "Takliflarni qabul qilish",
+      askForQuote: "Kelishiladi",
+      acceptBids: "Belgilangan narx",
     },
     locations: {
       title: "Yuklash va tushirish joylari",
@@ -1505,8 +1519,8 @@ export const uzTranslations: Translations = {
     pricing: {
       title: "Narxlar va shartlar",
       pricingMethod: "Narxlash usuli",
-      askForQuote: "Taklif so'rash",
-      acceptBids: "Takliflarni qabul qilish",
+      askForQuote: "Kelishiladi",
+      acceptBids: "Belgilangan narx",
       rateExcludingVat: "Tarif (QQSsiz)",
       rateIncludingVat: "Tarif (QQS bilan)",
       cashRate: "Naqd tarif",
@@ -1619,7 +1633,7 @@ export const uzTranslations: Translations = {
       message: "Eksportyorlar ma'lumotlarini yuklashda xatolik",
     },
   },
-  filterCargo: {  
+  filterCargo: {
     location: {
       pickupLocation: "Yuklash joyi",
       pickupPlaceholder: "Yuklash joyini kiriting...",
@@ -1660,6 +1674,9 @@ export const kzTranslations: Translations = {
       to: "Қайда",
       status: "Күй",
       actions: "Әрекеттер",
+      loadType: "Yuklash turi",
+      direction: "Бағыт",
+      trucktype: "Жүк машинасының түрі",
     },
     cargoType: "Жүк түрі:",
     packaging: "Қаптау:",
@@ -1668,8 +1685,7 @@ export const kzTranslations: Translations = {
     },
     error: {
       title: "Тапсырыстарды жүктеу қатесі",
-      message:
-        "Тапсырыстар тізімін жүктеу мүмкін болмады. Бетті жаңартып көріңіз.",
+      message: "Тапсырыстар тізімін жүктеу мүмкін болмады. Бетті жаңартып көріңіз.",
     },
     empty: {
       title: "Тапсырыстар жоқ",
@@ -1787,7 +1803,7 @@ export const kzTranslations: Translations = {
       dimensionsHeight: "Биіктігі (м)",
       pricingMethod: "Баға белгілеу әдісі *",
       askForQuote: "Ұсыныс сұрау",
-      acceptBids: "Ұсыныстарды қабылдау",
+      acceptBids: "<Ұсыныстарды қабылдау>",
     },
     locations: {
       title: "Жүктеу және түсіру орындары",
@@ -1857,7 +1873,8 @@ export const kzTranslations: Translations = {
   },
   postTruck: {
     title: "Жүк машинаңызды орналастырыңыз",
-    subtitle: "Жүк машинаңыздың қолжетімділігін бөлісіңіз және жүк иелерімен байланысыңыз",
+    subtitle:
+      "Жүк машинаңыздың қолжетімділігін бөлісіңіз және жүк иелерімен байланысыңыз",
     steps: {
       truckDetails: "Жүк машинасының мәліметтері",
       specifications: "Техникалық сипаттамалар",
@@ -2067,6 +2084,9 @@ export const kaaTranslations: Translations = {
       to: "Qayga",
       status: "Haql",
       actions: "Ámellar",
+      loadType: "Yuklash turi",
+      direction: "Bağıt",
+      trucktype: "Yük mashinasınıń túri",
     },
     cargoType: "Yük túri:",
     packaging: "Qaplama:",
@@ -2143,7 +2163,8 @@ export const kaaTranslations: Translations = {
       title: "Meniń Júk Buyırtpalarım",
       subtitle: "Siz jasaǧan buyırtpalar • Barlıǧı: ",
       emptyTitle: "Siz áli buyırtpa jasaǧan joqsız",
-      emptyMessage: "Tasımalawshılardı tabıw úshin birińshi júk buyırtpańızdı jariyalańız.",
+      emptyMessage:
+        "Tasımalawshılardı tabıw úshin birińshi júk buyırtpańızdı jariyalańız.",
       postFirst: "Birińshi Júgińizdi Jariyalańız",
       yourOrders: "Sizdiń buyırtpalariǹiz: ",
       postNew: "Jańa Júk Jariyalaw",
@@ -2358,7 +2379,8 @@ export const kaaTranslations: Translations = {
       postTruck: "Júk mashinasın orınlastırıw",
     },
     validation: {
-      createTruckFailed: "Júk mashinasın orınlastırıw múmkin bolmadı. Qaytadan urınıp kóriñ.",
+      createTruckFailed:
+        "Júk mashinasın orınlastırıw múmkin bolmadı. Qaytadan urınıp kóriñ.",
       createTruckSuccess: "Júk mashinası sátti orınlastırıldı!",
     },
   },

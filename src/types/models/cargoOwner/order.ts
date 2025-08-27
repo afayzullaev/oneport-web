@@ -1,3 +1,6 @@
+import type { TruckOptions } from "../carrier/truckoptions";
+import type { LoadType } from "./loadType";
+
 // ===== LOCALIZED STRING INTERFACE =====
 export interface LocalizedString {
   ru?: string;
@@ -74,23 +77,9 @@ export interface Order {
     country_code: string;
     place_id: string;
   };
-  truckOptions: string[]; // ObjectId array as string array
-  loadTypes?: (
-    | string
-    | {
-        _id: string;
-        name: LocalizedString;
-        __v?: number;
-      }
-  )[]; // ObjectId array as string array or populated objects
-  unloadTypes?: (
-    | string
-    | {
-        _id: string;
-        name: LocalizedString;
-        __v?: number;
-      }
-  )[]; // ObjectId array as string array or populated objects
+  truckOptions: TruckOptions[]; // ObjectId array as string array
+  loadTypes?: LoadType[]; // ObjectId array as string array or populated objects
+  unloadTypes?: LoadType[]; // ObjectId array as string array or populated objects
   gpsMonitoring: {
     enabled?: boolean;
     provider?: string;

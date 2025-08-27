@@ -19,6 +19,7 @@ import MyTrucks from "./pages/MyTrucks";
 import CreateProfile from "./pages/createProfile";
 import { LoadingSpinner } from "./components/ui/LoadingSpinner";
 import { useDelayedProfileFetch } from "./hooks/useDelayedProfileFetch";
+import MobileBottomNavigation from "./components/ui/MobileBottomNavigation";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAppSelector((state) => state.authToken.token);
@@ -146,6 +147,7 @@ function App() {
               />
             </Routes>
           </main>
+          <MobileBottomNavigation />
         </div>
       </Router>
     </ErrorBoundary>

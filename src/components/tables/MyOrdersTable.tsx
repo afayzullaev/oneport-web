@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetMyOrdersQuery, useUpdateOrderMutation, useDeleteOrderMutation } from "@/api/ordersApi";
-import type { Order, LocalizedString } from "@/types/models/cargoOwner/order";
+import {
+  useGetMyOrdersQuery,
+  useUpdateOrderMutation,
+  useDeleteOrderMutation,
+} from "@/api/ordersApi";
+import type { Order } from "@/types/models/cargoOwner/order";
 import { useLocalization } from "@/hooks/useLocalization";
 import type { LoadPackage } from "@/types/models/cargoOwner/loadPackage";
 import type { LoadType } from "@/types/models/cargoOwner/loadType";
 import OrderUpdateForm from "@/components/forms/OrderUpdateForm";
 
 // Component for displaying loadType name
-const LoadTypeName: React.FC<{ loadType?: Order["loadType"] }> = ({
-  loadType,
-}) => {
+const LoadTypeName: React.FC<{ loadType?: Order["loadType"] }> = ({ loadType }) => {
   const { getLocalizedText, t } = useLocalization();
 
   const loadTypeData: LoadType = loadType as LoadType;
@@ -18,15 +20,11 @@ const LoadTypeName: React.FC<{ loadType?: Order["loadType"] }> = ({
   if (!loadType) return <span>{t.common.notSpecified}</span>;
 
   if (typeof loadType === "object") {
-    return (
-      <span>{getLocalizedText(loadType.name, t.common.notSpecified)}</span>
-    );
+    return <span>{getLocalizedText(loadType.name, t.common.notSpecified)}</span>;
   }
 
   if (typeof loadType === "string" && loadTypeData) {
-    return (
-      <span>{getLocalizedText(loadTypeData.name, t.common.notSpecified)}</span>
-    );
+    return <span>{getLocalizedText(loadTypeData.name, t.common.notSpecified)}</span>;
   }
 
   return <span>{loadType}</span>;
@@ -43,15 +41,11 @@ const LoadPackageName: React.FC<{ loadPackage?: Order["loadPackage"] }> = ({
   if (!loadPackage) return <span>{t.common.standard}</span>;
 
   if (typeof loadPackage === "object") {
-    return (
-      <span>{getLocalizedText(loadPackage.name, t.common.standard)}</span>
-    );
+    return <span>{getLocalizedText(loadPackage.name, t.common.standard)}</span>;
   }
 
   if (typeof loadPackage === "string" && loadPackageData) {
-    return (
-      <span>{getLocalizedText(loadPackageData.name, t.common.standard)}</span>
-    );
+    return <span>{getLocalizedText(loadPackageData.name, t.common.standard)}</span>;
   }
 
   return <span>{loadPackage}</span>;
@@ -63,11 +57,7 @@ const MyOrdersTable: React.FC = () => {
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
 
   // Get user's own orders
-  const {
-    data: orders,
-    isLoading,
-    error,
-  } = useGetMyOrdersQuery();
+  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
 
   // Mutations
   const [updateOrder, { isLoading: isUpdating }] = useUpdateOrderMutation();
@@ -92,7 +82,7 @@ const MyOrdersTable: React.FC = () => {
       await updateOrder({ id: editingOrder._id, updates }).unwrap();
       closeEditModal();
     } catch (error) {
-      console.error('Failed to update order:', error);
+      console.error("Failed to update order:", error);
     }
   };
 
@@ -102,14 +92,14 @@ const MyOrdersTable: React.FC = () => {
     try {
       await deleteOrder(orderId).unwrap();
     } catch (error) {
-      console.error('Failed to delete order:', error);
+      console.error("Failed to delete order:", error);
     }
   };
 
   const formatWeight = (weight?: number, weightUnit?: string) => {
     if (!weight) return t.common.notSpecified;
-    return weightUnit === "ton" || weight >= 1000 
-      ? `${weight >= 1000 ? weight / 1000 : weight} ${t.common.ton}` 
+    return weightUnit === "ton" || weight >= 1000
+      ? `${weight >= 1000 ? weight / 1000 : weight} ${t.common.ton}`
       : `${weight} ${t.common.kg}`;
   };
 
@@ -117,24 +107,27 @@ const MyOrdersTable: React.FC = () => {
     if (!order.pricing) return t.common.negotiable;
     const price = order.pricing.withVat || order.pricing.withoutVat;
     if (!price) return t.common.negotiable;
-    return `${price} ${t.common.som} ${order.pricing.withVat ? t.common.withVat : t.common.withoutVat}`;
+    return `${price} ${t.common.som} ${
+      order.pricing.withVat ? t.common.withVat : t.common.withoutVat
+    }`;
   };
 
   const getStatusText = (loadStatus?: Order["loadStatus"]) => {
     if (!loadStatus) return t.status.notSpecified;
-    
+
     switch (loadStatus.state) {
-      case "ready_from": return t.status.readyFrom;
-      case "always": return t.status.always;
-      case "not_ready": return t.status.notReady;
-      default: return t.status.statusError;
+      case "ready_from":
+        return t.status.readyFrom;
+      case "always":
+        return t.status.always;
+      case "not_ready":
+        return t.status.notReady;
+      default:
+        return t.status.statusError;
     }
   };
 
-  const getObjectName = (
-    obj: any,
-    fallback: string = t.common.notSpecified
-  ): string => {
+  const getObjectName = (obj: any, fallback: string = t.common.notSpecified): string => {
     if (!obj) return fallback;
 
     if (typeof obj === "string") return obj;
@@ -155,29 +148,29 @@ const MyOrdersTable: React.FC = () => {
     return fallback;
   };
 
-  const getTypesBadges = (
-    types?: (string | { _id: string; name: LocalizedString; __v?: number })[]
-  ) => {
-    if (!types || types.length === 0) return null;
+  // const getTypesBadges = (
+  //   types?: (string | { _id: string; name: LocalizedString; __v?: number })[]
+  // ) => {
+  //   if (!types || types.length === 0) return null;
 
-    return (
-      <div className="flex flex-wrap gap-1 mt-1">
-        {types.slice(0, 2).map((type, index) => (
-          <span
-            key={index}
-            className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700"
-          >
-            {getObjectName(type, t.common.typeLabel)}
-          </span>
-        ))}
-        {types.length > 2 && (
-          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600">
-            +{types.length - 2}
-          </span>
-        )}
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="flex flex-wrap gap-1 mt-1">
+  //       {types.slice(0, 2).map((type, index) => (
+  //         <span
+  //           key={index}
+  //           className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700"
+  //         >
+  //           {getObjectName(type, t.common.typeLabel)}
+  //         </span>
+  //       ))}
+  //       {types.length > 2 && (
+  //         <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600">
+  //           +{types.length - 2}
+  //         </span>
+  //       )}
+  //     </div>
+  //   );
+  // };
 
   if (isLoading) {
     return (
@@ -187,8 +180,9 @@ const MyOrdersTable: React.FC = () => {
           <div className="space-y-2">
             {[...Array(5)].map((_, i) => (
               <div
-key={i}
-className="h-16 bg-gray-200 rounded"></div>
+                key={i}
+                className="h-16 bg-gray-200 rounded"
+              ></div>
             ))}
           </div>
         </div>
@@ -200,12 +194,8 @@ className="h-16 bg-gray-200 rounded"></div>
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <h3 className="text-red-800 font-medium">
-            {t.ordersTable.error.title}
-          </h3>
-          <p className="text-red-600 text-sm mt-1">
-            {t.ordersTable.error.message}
-          </p>
+          <h3 className="text-red-800 font-medium">{t.ordersTable.error.title}</h3>
+          <p className="text-red-600 text-sm mt-1">{t.ordersTable.error.message}</p>
         </div>
       </div>
     );
@@ -234,12 +224,13 @@ className="h-16 bg-gray-200 rounded"></div>
             {t.myItems.orders.title}
           </h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            {t.myItems.orders.subtitle}{orders.length}
+            {t.myItems.orders.subtitle}
+            {orders.length}
           </p>
         </div>
       </div>
 
-            {/* Edit Modal */}
+      {/* Edit Modal */}
       {editingOrder && (
         <OrderUpdateForm
           order={editingOrder}
@@ -279,8 +270,8 @@ className="h-16 bg-gray-200 rounded"></div>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {orders.map((order) => (
-              <tr 
-                key={order._id} 
+              <tr
+                key={order._id}
                 className="hover:bg-gray-50 transition-colors cursor-pointer"
                 onClick={() => order._id && handleOrderClick(order._id)}
               >
@@ -300,7 +291,7 @@ className="h-16 bg-gray-200 rounded"></div>
                 </td>
 
                 {/* Characteristics */}
-                <td className="px-6 py-4">
+                {/* <td className="px-6 py-4">
                   <div className="space-y-1">
                     {order.loadTypes && (
                       <div>
@@ -317,7 +308,7 @@ className="h-16 bg-gray-200 rounded"></div>
                       </div>
                     )}
                   </div>
-                </td>
+                </td> */}
 
                 {/* Price */}
                 <td className="px-4 py-4">
@@ -358,15 +349,16 @@ className="h-16 bg-gray-200 rounded"></div>
                   </span>
                   {order.loadStatus.interval && (
                     <div className="text-xs text-gray-500 mt-1">
-                      {order.loadStatus.interval.replace(/_/g, ' ')}
+                      {order.loadStatus.interval.replace(/_/g, " ")}
                     </div>
                   )}
                 </td>
 
                 {/* Actions */}
                 <td
-className="px-4 py-4"
-onClick={(e) => e.stopPropagation()}>
+                  className="px-4 py-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className="flex flex-col space-y-1">
                     <button
                       className="text-green-600 hover:text-green-800 text-sm font-medium text-left disabled:opacity-50"
@@ -393,7 +385,8 @@ onClick={(e) => e.stopPropagation()}>
       {/* Summary */}
       <div className="bg-gray-50 px-4 py-3 border-t border-gray-200">
         <div className="text-sm text-gray-700">
-          {t.myItems.orders.yourOrders}<span className="font-medium">{orders.length}</span>
+          {t.myItems.orders.yourOrders}
+          <span className="font-medium">{orders.length}</span>
         </div>
       </div>
     </div>

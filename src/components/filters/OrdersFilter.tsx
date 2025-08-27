@@ -1,4 +1,3 @@
-// src/components/filters/OrdersFilter.tsx
 import React, { useState, useEffect } from "react";
 import type { OrdersFilterParams } from "@/api/ordersApi";
 import LocationSelect from "@/components/ui/LocationSelect";
@@ -15,19 +14,16 @@ const OrdersFilter: React.FC<OrdersFilterProps> = ({
   currentFilters,
 }) => {
   const { t } = useLocalization();
-  
-  // Локальное состояние для полей ввода
-  const [localFilters, setLocalFilters] =
-    useState<OrdersFilterParams>(currentFilters);
 
-  // Синхронизируем локальное состояние с внешними фильтрами
+  const [localFilters, setLocalFilters] = useState<OrdersFilterParams>(currentFilters);
+
   useEffect(() => {
     setLocalFilters(currentFilters);
   }, [currentFilters]);
 
   const handleInputChange =
     (field: keyof OrdersFilterParams) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value =
         e.target.type === "number"
           ? +e.target.value || undefined
@@ -39,14 +35,15 @@ const OrdersFilter: React.FC<OrdersFilterProps> = ({
       });
     };
 
-  const handleLocationSelect = (field: 'loadCountry' | 'unloadCountry') => (location: LocationResult | null) => {
-    const countryName = location?.address?.country || location?.display_place || '';
-    
-    setLocalFilters({
-      ...localFilters,
-      [field]: countryName || undefined,
-    });
-  };
+  const handleLocationSelect =
+    (field: "loadCountry" | "unloadCountry") => (location: LocationResult | null) => {
+      const countryCode = location?.address?.country_code || "";
+
+      setLocalFilters({
+        ...localFilters,
+        [field]: countryCode || undefined,
+      });
+    };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -88,8 +85,7 @@ const OrdersFilter: React.FC<OrdersFilterProps> = ({
             <LocationSelect
               label={t.filterCargo.location.pickupLocation}
               placeholder={t.filterCargo.location.pickupPlaceholder}
-              value={localFilters.loadCountry || ""}
-              onSelect={handleLocationSelect('loadCountry')}
+              onSelect={handleLocationSelect("loadCountry")}
               showCountryOnly={true}
               className="text-sm"
             />
@@ -99,8 +95,7 @@ const OrdersFilter: React.FC<OrdersFilterProps> = ({
             <LocationSelect
               label={t.filterCargo.location.deliveryLocation}
               placeholder={t.filterCargo.location.deliveryPlaceholder}
-              value={localFilters.unloadCountry || ""}
-              onSelect={handleLocationSelect('unloadCountry')}
+              onSelect={handleLocationSelect("unloadCountry")}
               showCountryOnly={true}
               className="text-sm"
             />
@@ -179,8 +174,7 @@ const OrdersFilter: React.FC<OrdersFilterProps> = ({
               <div className="flex flex-wrap gap-1">
                 {Object.entries(currentFilters)
                   .filter(
-                    ([, value]) =>
-                      value !== undefined && value !== null && value !== ""
+                    ([, value]) => value !== undefined && value !== null && value !== ""
                   )
                   .map(([key, value]) => (
                     <span
