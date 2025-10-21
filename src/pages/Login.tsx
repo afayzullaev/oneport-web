@@ -156,7 +156,9 @@ strokeWidth={2.5} />
                   {sendError && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                       <p className="text-red-600 text-sm text-center">
-                        Ошибка при отправке кода. Попробуйте еще раз.
+                        {"status" in sendError && sendError.status === 401
+                          ? "Ошибка авторизации сервиса SMS. Обратитесь к администратору."
+                          : "Ошибка при отправке кода. Попробуйте еще раз."}
                       </p>
                     </div>
                   )}
