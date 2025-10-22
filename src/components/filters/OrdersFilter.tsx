@@ -37,11 +37,11 @@ const OrdersFilter: React.FC<OrdersFilterProps> = ({
 
   const handleLocationSelect =
     (field: "loadCountry" | "unloadCountry") => (location: LocationResult | null) => {
-      const countryCode = location?.address?.country_code || "";
+      const countryName = location?.address?.country || "";
 
       setLocalFilters({
         ...localFilters,
-        [field]: countryCode || undefined,
+        [field]: countryName || undefined,
       });
     };
 

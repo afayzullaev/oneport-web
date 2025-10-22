@@ -7,6 +7,7 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
     prepareHeaders: (headers) => {
+      // Ensure clean headers for public auth endpoints
       headers.set("Content-Type", "application/json");
       return headers;
     },
