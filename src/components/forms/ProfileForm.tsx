@@ -15,6 +15,7 @@ const ProfileForm: React.FC = () => {
     address: "",
     // Individual fields
     birthDate: "",
+    phoneNumbers: [],
     passportNumber: "",
     // Company fields
     representativeFullname: "",
@@ -155,23 +156,15 @@ const ProfileForm: React.FC = () => {
         {formData.type === "individual" && (
           <>
             <div>
-              <label className="block text-sm font-medium mb-2">Дата рождения</label>
-              <input
-                type="date"
-                value={formData.birthDate}
-                onChange={(e) => handleInputChange("birthDate", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Номер паспорта</label>
-              <input
-                type="text"
-                value={formData.passportNumber}
-                onChange={(e) => handleInputChange("passportNumber", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Поля необязательное"
-              />
+              <label className="block text-sm font-medium mb-2">Номер телефона</label>
+              <div className="flex items-center space-x-2 mb-2">
+                <input
+                  type="phone"
+                  value={formData.phoneNumbers[0]}
+                  onChange={(e) => handleInputChange("phoneNumbers[0]", e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
             </div>
           </>
         )}

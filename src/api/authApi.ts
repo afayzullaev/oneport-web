@@ -2,33 +2,58 @@
 import { BASE_URL } from "@/constants/config";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+interface EmailOtpRequest {
+  email: string;
+}
+
+interface EmailOtpVerifyRequest extends EmailOtpRequest {
+  code: string;
+}
+
+interface EmailOtpResponse {
+  success: boolean;
+  message: string;
+  expiresIn?: number;
+  retryAfter?: number;
+}
+
+interface VerifyEmailOtpResponse {
+  success: boolean;
+  message: string;
+  token: string;
+  user: { _id: string; email: string };
+}
+
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
     prepareHeaders: (headers) => {
-      // Ensure clean headers for public auth endpoints
       headers.set("Content-Type", "application/json");
       return headers;
     },
   }),
   endpoints: (builder) => ({
-    sendOtp: builder.mutation<
-      { message: string },
-      { phone: string; language?: string }
-    >({
+    sendEmailOtp: builder.mutation<EmailOtpResponse, EmailOtpRequest>({
       query: (body) => ({
-        url: "auth/send-otp",
+        url: "auth/otp/send",
         method: "POST",
         body,
       }),
     }),
-    verifyOtp: builder.mutation<
-      { token: string; user: { _id: string; phone: string } },
-      { phone: string; otp: string }
+    resendEmailOtp: builder.mutation<EmailOtpResponse, EmailOtpRequest>({
+      query: (body) => ({
+        url: "auth/otp/resend",
+        method: "POST",
+        body,
+      }),
+    }),
+    verifyEmailOtp: builder.mutation<
+      VerifyEmailOtpResponse,
+      EmailOtpVerifyRequest
     >({
       query: (body) => ({
-        url: "auth/verify-otp",
+        url: "auth/otp/verify",
         method: "POST",
         body,
       }),
@@ -36,4 +61,8 @@ export const authApi = createApi({
   }),
 });
 
-export const { useSendOtpMutation, useVerifyOtpMutation } = authApi;
+export const {
+  useSendEmailOtpMutation,
+  useResendEmailOtpMutation,
+  useVerifyEmailOtpMutation,
+} = authApi;
